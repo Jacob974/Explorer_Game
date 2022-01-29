@@ -1,0 +1,18 @@
+
+
+loop through all the blocks
+{
+    if the block is filled
+    {
+        if the players feet are above the block
+        {
+            if the players feet + downwords accelleration are below the block  
+            {
+                if (the players right side is larger than the blocks left side) and (the players left side is smaller than the blocks right side)
+                {
+                    the players feet are at the blocks level
+                }
+            }
+        }
+    }
+}
