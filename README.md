@@ -1,4 +1,2 @@
 # Tank_Game
-A 2D game about tanks
-
-# this is a test game I'm making with SDL
+This is a 2D game I'm making with SDL. I'm mainly just doing this to learn how game developement works

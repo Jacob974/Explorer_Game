@@ -1,9 +1,13 @@
 #include <stdio.h>
+#include <math.h>
 
-int main()
+int main(int argc, char* args[])
 {
-    if(!(1))
-    {
-        printf("message\n");
-    }
+    int y = 3;
+    int z = 10;
+
+    double b;
+    double a = 10.3;
+
+    printf("%f\n", (0.0/0.0));
 }

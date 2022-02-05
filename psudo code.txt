@@ -1,4 +1,4 @@
-
+//detecting if there is a collision
 
 loop through all the blocks
 {
@@ -15,4 +15,39 @@ loop through all the blocks
             }
         }
     }
+}
+
+//how to ajust for the collision
+
+int xMovement //the amount its moves
+int yMovement
+
+int fromLeft //if 
+int fromTop //what direction it came from
+
+if xAccelleration >= xOrigin
+{
+    xMovement = xAccelleration - the blocks left side 
+    fromLeft = 1
+}
+else
+{
+    xMovement = the blocks right side - xAccelleration
+    fromLeft = 0
+}
+
+if yAccelleration >= yOrigin
+{
+    yMovement = yAccelleration - the top of the block
+    fromTop = 1
+}
+else
+{
+    yMovement = the blocks bottom - yAccelleration
+    fromTop = 0
+}
+
+if yMovement > xMovement
+{
+    
 }
