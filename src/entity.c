@@ -26,12 +26,6 @@ void detectGroundCollision(struct Entity *entity, struct TileMap *tileMap)
 
     int fromLeft; //if it came from the left. This is a bool
     int fromTop; //if it came from the top. This is a bool
-
-    int maxXMovement = entity->accel.x; //the maximum amount the entity can move on the x axis
-    int maxYMovement = entity->accel.y; //the maximum amount the entity can move on the y axis
-    
-    int footHight = entity->coords.y + entity->dest.h;
-    int rightSide = entity->coords.x + entity->dest.w;
     
     //determine the direction
     if(entity->accel.x >= entity->dest.x) //if entity is going right
@@ -66,70 +60,13 @@ void detectGroundCollision(struct Entity *entity, struct TileMap *tileMap)
                         //determines how to move the entity 
                         printf("intersection\n");
 
-                        //what ratio of the entities movement is outside the block
-                        if(fromLeft)
-                        {
-                            xAmount = (double)((entity->coords.x + entity->dest.w)- (w * 32))/(double)((xPos  + entity->dest.w) - (w * 32));
-                        }
-                        else
-                        {
-                            xAmount = (double)(xPos - (w * 32 + 32))/(double)((w * 32 + 32) - xPos);
-                        }
-                        if(fromTop)
-                        {
-                            yAmount = (double)((entity->coords.y + entity->dest.h) - (h * 32))/(double)((yPos + entity->dest.h)- (h * 32));
-                        }
-                        else
-                        {
-                            yAmount = (double)(yPos - (h * 32 + 32))/(double)((h * 32 + 32) - yPos);
-                        }
-                        //determines what side of the block is hit first
-
-                        if(yAmount < xAmount)
-                        {
-                            if(fromTop)
-                            {
-                                yPos = (h * 32);
-                                if(yPos < yFinalPos) //only swaps final y for y if y is less
-                                {
-                                    yFinalPos = yPos;
-                                }
-                            }
-                            else
-                            {
-                                xPos = (h * 32 + 32);
-                                if(yPos > yFinalPos)
-                                {
-                                    yFinalPos = yPos;
-                                }
-                            }
-                        }
-                        else
-                        {
-                            if(fromLeft)
-                            {
-                                xPos = (w * 32);
-                                if(xPos < xFinalPos) //only swaps final x for x if x is less
-                                {
-                                    xFinalPos = xPos;
-                                }
-                            }
-                            else
-                            {
-                                xPos = (w * 32 + 32);
-                                if(xPos > xFinalPos)
-                                {
-                                    xFinalPos = xPos;
-                                }
-                            }
-                        }
                     }
                 }
             }
         }
     }
-    entity->coords.x = xFinalPos;
-    entity->coords.y = yFinalPos;
+    entity->coords.x = xPos;
+    entity->coords.y = yPos;
 
     entity->accel.x = 0;
     entity->accel.y = 0;
