@@ -9,5 +9,5 @@ int main(int argc, char* args[])
     double b;
     double a = 10.3;
 
-    printf("%f\n", (0.0/0.0));
+    printf("%f\n", (0.0/20.0));
 }
