@@ -18,6 +18,7 @@ void detectGroundCollision(struct Entity *entity, struct TileMap *tileMap)
     int xPos = entity->coords.x + entity->accel.x; //the new x coordinate before hit detection
     int yPos = entity->coords.y + entity->accel.y; //the new y coordinate before hit detection
 
+
     //loops through all the tiles
     for (int w = 0; w < 32; w++) //width
     {
@@ -37,7 +38,6 @@ void detectGroundCollision(struct Entity *entity, struct TileMap *tileMap)
             }
         }
     }
-    
     entity->coords.x = xPos;
     entity->coords.y = yPos;
 
