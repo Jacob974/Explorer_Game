@@ -38,6 +38,5 @@ void renderTileMap(struct TileMap* tileMap, SDL_Renderer* ren)
                 SDL_RenderCopy(ren, tileMap->tile.texture, NULL, &tileMap->tile.dest);
             }
         }
-    }
-    
+    }  
 }
