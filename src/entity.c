@@ -10,7 +10,6 @@ void createEntity(struct Entity *ent, int xCoord, int yCoord, int x, int y, int 
 
     ent->coords.x = xCoord;
     ent->coords.y = yCoord;
-
     ent->texture = IMG_LoadTexture(renderer, filepath);
 }
 void detectGroundCollision(struct Entity *entity, struct TileMap *tileMap)
