@@ -7,7 +7,10 @@ int main(int argc, char* args[])
     int z = 10;
 
     double b;
-    double a = 10.3;
+    double a = (0.1/0.0);
 
-    printf("%f\n", (0.0/20.0));
+    if(a)
+    {
+        printf("nan\n");
+    }
 }

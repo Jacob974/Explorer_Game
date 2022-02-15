@@ -37,6 +37,7 @@ int main(int argc, char *args[])
     SDL_Window *window = SDL_CreateWindow(title, 0, 0, windowWidth, windowHight,SDL_WINDOW_RESIZABLE);
     SDL_Renderer *renderer = SDL_CreateRenderer(window, -1, SDL_RENDERER_ACCELERATED);
     SDL_Event pollEvent;
+    const Uint8* keyState = SDL_GetKeyboardState(NULL);
 
     /*game objects*/ 
 
@@ -63,103 +64,41 @@ int main(int argc, char *args[])
         case SDL_QUIT: 
             gameRunning = 0;
             break;
- 
-        case SDL_KEYDOWN: // keys pressed
-            switch (pollEvent.key.keysym.sym)
-            {
-            case SDLK_w:
-                w = 1;
-                break;
-            case SDLK_a:
-                a = 1;
-                break;
-            case SDLK_s:
-                s = 1;
-                break;
-            case SDLK_d:
-                d = 1;
-                break;
-            case SDLK_UP:
-                up = 1;
-                break;
-            case SDLK_LEFT:
-                left = 1;
-                break;
-            case SDLK_DOWN:
-                down = 1;
-                break;
-            case SDLK_RIGHT:
-                right = 1;
-                break;
-            }
-            break;
-
-        case SDL_KEYUP: // keys released
-            switch (pollEvent.key.keysym.sym)
-            {
-            case SDLK_w:
-                w = 0;
-                break;
-            case SDLK_a:
-                a = 0;
-                break;
-            case SDLK_s:
-                s = 0;
-                break;
-            case SDLK_d:
-                d = 0;
-                break;
-            case SDLK_UP:
-                up = 0;
-                break;
-            case SDLK_LEFT:
-                left = 0;
-                break;
-            case SDLK_DOWN:
-                down = 0;
-                break;
-            case SDLK_RIGHT:
-                right = 0;
-                break;
-            }
-        default:
-            break;
         }
-        /*update*/
-        if(w)
+        //gets key events and updates the player movement
+        if(keyState[SDL_SCANCODE_W])
         {
             player.accel.y = -5;
         }
-        if(a)
+        if(keyState[SDL_SCANCODE_A])
         {
             player.accel.x = -5;
         }
-        if(s)
+        if(keyState[SDL_SCANCODE_S])
         {
             player.accel.y = 5;
         }
-        if(d)
+        if(keyState[SDL_SCANCODE_D])
         {
             player.accel.x = 5;
         }
-        if(up)
+        if(keyState[SDL_SCANCODE_UP])
         {
             player.dest.y -= 5;
         }
-        if(left)
+        if(keyState[SDL_SCANCODE_DOWN])
+        {
+            player.dest.y += 5;
+        }
+        if(keyState[SDL_SCANCODE_LEFT])
         {
             player.dest.x -= 5;
         }
-        if(down)
+        if(keyState[SDL_SCANCODE_RIGHT])
         {
-            player.dest.y += 5; 
+            player.dest.x += 5;
         }
-        if(right)
-        {
-            player.dest.x += 5; 
-        }
-        
-
+     
         updateTileMap(&tileMap, &player); // tile map gets updated
         detectGroundCollision(&player, &tileMap);
 
