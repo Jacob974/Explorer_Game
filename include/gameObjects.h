@@ -1,5 +1,8 @@
 #pragma once
-struct Vec2f
+#include <SDL2/SDL.h>
+#include <SDL2/SDL_image.h>
+
+struct Vec2
 {
     int x;
     int y;
@@ -10,8 +13,8 @@ struct Entity
     SDL_Rect dest;
     SDL_Texture* texture;
 
-    struct Vec2f coords; //coords
-    struct Vec2f accel; //accel
+    struct Vec2 coords; //coords
+    struct Vec2 accel; //accel
 };
 struct Tile 
 {

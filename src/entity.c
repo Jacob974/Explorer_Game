@@ -1,12 +1,6 @@
 #include "entity.h"
 #include <math.h>
 
-#define no_movement 0
-#define left 1
-#define right 2
-#define up 1
-#define down 2
-
 void createEntity(struct Entity *ent, int xCoord, int yCoord, int x, int y, int w, int h, const char *filepath, SDL_Renderer *renderer)
 {
     ent->dest.x = x;
@@ -18,70 +12,64 @@ void createEntity(struct Entity *ent, int xCoord, int yCoord, int x, int y, int 
     ent->coords.y = yCoord;
     ent->texture = IMG_LoadTexture(renderer, filepath);
 }
-void detectGroundCollision(struct Entity *entity, struct TileMap *tileMap)
+struct Vec2 detectCollisionPoint(struct Vec2 entAccel, struct Vec2 entPos, struct Vec2 tilePos, struct Vec2 tileSize)
 {
-    int xPos = entity->coords.x + entity->accel.x; // the new x coordinate before hit detection
-    int yPos = entity->coords.y + entity->accel.y; // the new y coordinate before hit detection
+    struct Vec2 collisionPoint;
 
-    int xDirection = no_movement;
-    int yDirection = no_movement;
+    /* How far along the vector each side is. The sides are represented as their . 
+    These equations return the position of the specific point of the tile minus the coordinate of the entity.
+    The number is then divided by the acceleration amount for that side.
+    If the accel is 0, the whole number is turned into 0 since you cant divide by 0 normally*/
 
-    // gets the direction the entity is coming from
-    if(entity->accel.x > 0)
-    {
-        xDirection = right;
-    }
-    if(entity->accel.x < 0)
-    {
-        xDirection = left;
-    }
-    if(entity->accel.y > 0)
-    {
-        yDirection = up;
-    }
-    if(entity->accel.y < 0)
-    {
-        yDirection = down;
-    }
+ 
+    double leftXRatio = ((double)(tilePos.x - entPos.x) / (double)(entAccel.x));
+    double rightXRatio = ((double)(tilePos.x + tileSize.x - entPos.x) / (double)(entAccel.x));
+    double topYRatio = ((double)(tilePos.y - entPos.y) / (double)(entAccel.y));
+    double bottomYRatio = ((double)(tilePos.y + tileSize.y - entPos.y) / (double)(entAccel.y));
 
-    // loops through all the tiles
-    for (int w = 0; w < 32; w++) // width
+    /* Which side of the tile the line intersects. This is based on whether the accel is negetive or not */
+    int XIntersectedSide = (entAccel.x < 0 ? tilePos.x + tileSize.x : tilePos.x); //right/left
+    int YIntersectedSide = (entAccel.y < 0 ? tilePos.y + tileSize.y : tilePos.y); //bottom/top
+
+    /* This determines which point is nearest and farthest away from the origin.
+    The near ratio gets the smallest of the two ratios for that side, and for the far side vise versa */
+    double nearYRatio = (topYRatio < bottomYRatio ? topYRatio : bottomYRatio);
+    double nearXRatio = (leftXRatio < rightXRatio ? leftXRatio : rightXRatio);
+    double farYRatio = (topYRatio >= bottomYRatio ? topYRatio : bottomYRatio);
+    double farXRatio = (leftXRatio >= rightXRatio ? leftXRatio : rightXRatio);
+
+    /* Determines which side the vector hits first */
+    if(nearXRatio > nearYRatio) //hits a horizontel line
     {
-        for (int h = 0; h < 64; h++) // hight
+        if((nearXRatio < 1.0) && (nearXRatio < farYRatio) && (nearXRatio >= 0))//detects if theres actually a collision
         {
-            //detects if a block is there
-            if (tileMap->tileData[w][h] == 1)
-            {
-                //detects if theres a collision
-                if (!(xPos + entity->dest.w < (w * 32) || xPos > (w * 32 + 32))) // if entity is intersecting on the x axis
-                {
-                    if (!(yPos > (h * 32 + 32) || yPos + entity->dest.h < (h * 32))) // if entity is intersecting on the y axis
-                    {
-                        printf("intersection\n");
-                        //detects if there is a colision on both axies
-                        if(xDirection == no_movement)
-                        {
-                            if(xDirection == right)
-                            {
-                                //(w * 32) <  ? 
-                            }
-                        }
-                        else if(!yDirection == no_movement)
-                        {
-
-                        }
-                        else
-                        {
-
-                        } 
-                    }
-                }
-            }
+            collisionPoint.x = XIntersectedSide;
+            collisionPoint.y = entPos.y + (nearXRatio * entAccel.y);
         }
+        else
+        {
+            collisionPoint.x = entPos.x + entAccel.x;
+            collisionPoint.y = entPos.y + entAccel.y;
+        }
+        
+        
     }
-    entity->coords.x = xPos;
-    entity->coords.y = yPos;
+    else //hits the vertical line
+    {
+        
+        if((nearYRatio < 1.0) && (nearYRatio < farXRatio) && (nearYRatio >= 0))//detects if theres actually a collision
+        {
+            collisionPoint.y = YIntersectedSide;
+            collisionPoint.x = entPos.x + (nearYRatio * entAccel.x);
+        }
+        else
+        {
+            collisionPoint.x = entPos.x + entAccel.x;
+            collisionPoint.y = entPos.y + entAccel.y;
+        }
+        
+    }
 
-    entity->accel.x = 0;
-    entity->accel.y = 0;
+
+    return(collisionPoint);
 }
