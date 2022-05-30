@@ -8,7 +8,7 @@
 /**
  * @brief Creates a Entity object
  */
-void createEntity(struct Entity *ent, int xCoord, int yCoord, int x, int y, int w, int h, const char *filepath, SDL_Renderer *renderer);
+struct Entity createEntity(int xCoord, int yCoord, int x, int y, int w, int h, const char *filepath, SDL_Renderer *renderer);
 /**
  *  @brief the point at which an entity collides with a tile along a vector
  *

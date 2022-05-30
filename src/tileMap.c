@@ -1,42 +1,46 @@
 #include "tileMap.h"
+#include <stdlib.h>
 
-void createTile(struct Tile* tile, int w, int h, SDL_Renderer* ren)
+struct Tile createTile(int xCoord, int yCoord, int w, int h, const char *imagePath, SDL_Renderer* ren)
 {
-    tile->dest.w = w; 
-    tile->dest.h = h;
-    tile->texture = IMG_LoadTexture(ren, "res/gfx/dirt.png");
+    struct Tile temp;
+    temp.size.x = w; 
+    temp.size.y = h;
+    temp.coords.x = xCoord;
+    temp.coords.y = yCoord;
+    temp.texture = IMG_LoadTexture(ren, imagePath);
+
+    return temp;
 }
-void createTileMap(struct TileMap* tileMap, struct Tile* tile, int mapData[32][64])
+struct TileMap createTileMap()
 {
-    tileMap->tile = *tile; //gets the tile info
-    for(int w = 0; w < 32; w++) //puts data from map into the TileMap struct
-    {
-        for(int h = 0; h < 64; h++)
-        {
-            tileMap->tileData[w][h] = mapData[w][h];
-        }
-    }
-} 
+    struct TileMap tempMap;
+    tempMap.amountOfTiles = 0;
+    return tempMap;
+}
+void addTile(struct TileMap* map, struct Tile* tile)
+{
+    map->tiles[map->amountOfTiles] = tile;
+    map->amountOfTiles++;
+}
 void updateTileMap(struct TileMap* tileMap, struct Entity* entity) 
 {   
     //where to start rendering the ground from on the y is
     tileMap->yOffset = entity->dest.y - entity->coords.y;
 
     //where to start rendering the ground from on the x is
-    tileMap->xOffset = entity->dest.x - entity->coords.x; 
+    tileMap->xOffset = entity->dest.x - entity->coords.x ; 
 }
 void renderTileMap(struct TileMap* tileMap, SDL_Renderer* ren)
 {
-    for(int w = 0; w < 32; w++) //puts data from map into the TileMap struct 
+    for(int i = 0; i < tileMap->amountOfTiles; i++)
     {
-        for(int h = 0; h < 64; h++) 
-        {
-            if(tileMap->tileData[w][h] == 1) 
-            {
-                tileMap->tile.dest.x = (w * 32) + tileMap->xOffset; //possition of tile
-                tileMap->tile.dest.y = (h * 32) + tileMap->yOffset;
-                SDL_RenderCopy(ren, tileMap->tile.texture, NULL, &tileMap->tile.dest);
-            }
-        }
+        SDL_Rect renderingCoords; //turns the size and possition into an ASL_Rect
+        renderingCoords.x = tileMap->tiles[i]->coords.x + tileMap->xOffset;
+        renderingCoords.y = tileMap->tiles[i]->coords.y + tileMap->yOffset;
+        renderingCoords.h = tileMap->tiles[i]->size.y;
+        renderingCoords.w = tileMap->tiles[i]->size.x;
+
+        SDL_RenderCopy(ren, tileMap->tiles[i]->texture, NULL, &renderingCoords);
     }  
 }

@@ -1,21 +1,24 @@
 #include "entity.h"
 #include <math.h>
 
-void createEntity(struct Entity *ent, int xCoord, int yCoord, int x, int y, int w, int h, const char *filepath, SDL_Renderer *renderer)
+struct Entity createEntity(int xCoord, int yCoord, int x, int y, int w, int h, const char *filepath, SDL_Renderer *renderer)
 {
-    ent->dest.x = x;
-    ent->dest.y = y;
-    ent->dest.w = w;
-    ent->dest.h = h;
+    struct Entity temp;
+    temp.dest.x = x;
+    temp.dest.y = y;
+    temp.dest.w = w;
+    temp.dest.h = h;
 
-    ent->coords.x = xCoord;
-    ent->coords.y = yCoord;
-    ent->texture = IMG_LoadTexture(renderer, filepath);
+    temp.coords.x = xCoord;
+    temp.coords.y = yCoord;
+    temp.texture = IMG_LoadTexture(renderer, filepath);
+
+    return temp;
 }
 struct Vec2 detectCollisionPoint(struct Vec2 entAccel, struct Vec2 entPos, struct Vec2 tilePos, struct Vec2 tileSize)
 {
     struct Vec2 collisionPoint;
-
+    
     /* How far along the vector each side is. The sides are represented as their . 
     These equations return the position of the specific point of the tile minus the coordinate of the entity.
     The number is then divided by the acceleration amount for that side.
@@ -51,8 +54,6 @@ struct Vec2 detectCollisionPoint(struct Vec2 entAccel, struct Vec2 entPos, struc
             collisionPoint.x = entPos.x + entAccel.x;
             collisionPoint.y = entPos.y + entAccel.y;
         }
-        
-        
     }
     else //hits the vertical line
     {
@@ -66,10 +67,7 @@ struct Vec2 detectCollisionPoint(struct Vec2 entAccel, struct Vec2 entPos, struc
         {
             collisionPoint.x = entPos.x + entAccel.x;
             collisionPoint.y = entPos.y + entAccel.y;
-        }
-        
+        }        
     }
-
-
     return(collisionPoint);
 }

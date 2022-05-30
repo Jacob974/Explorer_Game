@@ -5,7 +5,8 @@
 
 #include "gameObjects.h"
  
-void createTile(struct Tile* tile, int w, int h, SDL_Renderer* ren);
-void createTileMap(struct TileMap* tileMap, struct Tile* tile, int mapData[32][64]);
+struct Tile createTile(int xCoord, int yCoord, int w, int h, const char *imagePath, SDL_Renderer* ren);
+struct TileMap createTileMap();
+void addTile(struct TileMap* map, struct Tile* tile);
 void updateTileMap(struct TileMap* tileMap, struct Entity* entity);
 void renderTileMap(struct TileMap* tileMap, SDL_Renderer* ren);

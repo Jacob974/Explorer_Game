@@ -9,7 +9,7 @@
       "stopAtEntry": false,
       "cwd": "/home/jacob/projects/MyGame",
       "environment": [],
-      "program": "/home/jacob/projects/MyGame/build/Debug/outDebug",
+      "program": "/home/jacob/projects/MyGame/bin/main.exe",
       "internalConsoleOptions": "openOnSessionStart",
       "MIMode": "lldb",
       "miDebuggerPath": "/usr/bin/gdb",

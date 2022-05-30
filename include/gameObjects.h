@@ -18,13 +18,16 @@ struct Entity
 };
 struct Tile 
 {
-    SDL_Rect dest;
+    struct Vec2 size;
+    struct Vec2 coords;
     SDL_Texture* texture;
 };
 struct TileMap
 {
+    int amountOfTiles;
+
     int xOffset;
     int yOffset;
-    struct Tile tile;
-    int tileData[32][64];
+    
+    struct Tile* tiles[10]; //a string of tiles
 };

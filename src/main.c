@@ -20,21 +20,22 @@ int main(int argc, char *args[])
     int windowWidth = 1100;
     int gameRunning = 1;
 
-    // game objects
-    struct Vec2 entPos = (struct Vec2){.x = windowWidth/2, .y = windowHight/2};
-    struct Vec2 tilePos = (struct Vec2){.x = 800, .y = 290};
-    struct Vec2 tileSize = (struct Vec2){.x = 80, .y = 60};
-
-    struct Vec2 mainLine;
-    struct Vec2 intersectedLine;
-
-    struct Vec2 mouseCoords;
-
     // creates SDL objects
     SDL_Window *window = SDL_CreateWindow(title, 0, 0, windowWidth, windowHight,SDL_WINDOW_RESIZABLE);
     SDL_Renderer *renderer = SDL_CreateRenderer(window, -1, SDL_RENDERER_ACCELERATED);
     SDL_Event pollEvent;
 
+    // game objects
+    struct Entity player = createEntity(0, 0, windowWidth / 2, windowHight / 2, 32, 64, "res/gfx/guy.png", renderer);
+    struct Tile tile = createTile(0, 0, 32, 32, "res/gfx/brick.png", renderer);
+    struct TileMap tileMap = createTileMap();
+    addTile(&tileMap, &tile);
+
+    struct Vec2 entPos = (struct Vec2){.x = windowWidth/2, .y = windowHight/2};
+    struct Vec2 tilePos = (struct Vec2){.x = 800, .y = 290};
+    struct Vec2 tileSize = (struct Vec2){.x = 32, .y = 32};
+
+    struct Vec2 mouseCoords;
     const Uint8* keyState;
 
     // timestep variables
@@ -62,45 +63,37 @@ int main(int argc, char *args[])
         keyState = SDL_GetKeyboardState(NULL);
         if(keyState[SDL_SCANCODE_UP])
         {
-            tilePos.y -= 5;
+            player.accel.y -= 5;
         }
         if(keyState[SDL_SCANCODE_DOWN])
         {
-            tilePos.y += 5;
+            player.accel.y += 5;
         }
         if(keyState[SDL_SCANCODE_RIGHT])
         {
-            tilePos.x += 5;
+            player.accel.x += 5;
         }
         if(keyState[SDL_SCANCODE_LEFT])
         {
-            tilePos.x -= 5;
+            player.accel.x -= 5;
         }
         
-
         /* update */
-        struct Vec2 temp;
-        struct Vec2 otherTemp = (struct Vec2){.x = mouseCoords.x - entPos.x, .y = mouseCoords.y - entPos.y};
-        temp = detectCollisionPoint(otherTemp, entPos, tilePos, tileSize);
-        
+        player.coords = detectCollisionPoint(player.accel, player.coords, tile.coords, tile.size);
+        player.accel.y = 0;
+        player.accel.x = 0;
+
+        updateTileMap(&tileMap, &player);
+
         /*render*/
 
         SDL_RenderClear(renderer);
 
-        //renders the tile
-        SDL_SetRenderDrawColor(renderer, 255, 255, 0, 255);
-        SDL_RenderDrawLine(renderer, tilePos.x, tilePos.y, tilePos.x + tileSize.x, tilePos.y);
-        SDL_RenderDrawLine(renderer, tilePos.x, tilePos.y, tilePos.x, tilePos.y + tileSize.y);
-        SDL_RenderDrawLine(renderer, tilePos.x, tilePos.y + tileSize.y, tilePos.x + tileSize.x, tilePos.y + tileSize.y);
-        SDL_RenderDrawLine(renderer, tilePos.x + tileSize.x, tilePos.y,  tilePos.x + tileSize.x, tilePos.y + tileSize.y);
-        SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255);
+        //renders the tile map
+        //renderTileMap(&tileMap, renderer);
+        renderTileMap(&tileMap, renderer);
+        SDL_RenderCopy(renderer, player.texture, NULL, &player.dest);
 
-        //renders a line from 0,0 to the mouse
-        SDL_SetRenderDrawColor(renderer, 255, 255, 255, 255);
-        SDL_RenderDrawLine(renderer, entPos.x, entPos.y, temp.x, temp.y);
-        SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255);
-
-        //renders a circle where the point intersects
 
         SDL_RenderPresent(renderer);
 
@@ -114,19 +107,10 @@ int main(int argc, char *args[])
             printf("too fast!!!\n");
         }
         /*print*/
-        
-    
-        double leftXRatio = ((double)(tilePos.x - entPos.x) / (double)(mouseCoords.x - entPos.x));
-        double rightXRatio = ((double)(tilePos.x + tileSize.x - entPos.x) / (double)(mouseCoords.x - entPos.x));
-        double topYRatio = ((double)(tilePos.y - entPos.y) / (double)(mouseCoords.y - entPos.y));
-        double bottomYRatio = ((double)(tilePos.y + tileSize.y - entPos.y) / (double)(mouseCoords.y - entPos.y));
-
-        printf("near x ratio = %f\n", leftXRatio);
-        printf("far y ratio = %f\n", topYRatio);
-        printf("|\n|\n");
-        printf("near y ratio = %f\n", bottomYRatio);
-        printf("far x ratio = %f\n", rightXRatio);
-        
+        if(argc > 1)
+        {
+            printf("xCoord: %d\n yCoord: %d\n\n", player.coords.x, player.coords.y);
+        }
     }
 
     SDL_DestroyWindow(window);
