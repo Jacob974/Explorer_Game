@@ -26,10 +26,20 @@ int main(int argc, char *args[])
     SDL_Event pollEvent;
 
     // game objects
-    struct Entity player = createEntity(0, 0, windowWidth / 2, windowHight / 2, 32, 64, "res/gfx/guy.png", renderer);
-    struct Tile tile = createTile(0, 0, 32, 32, "res/gfx/brick.png", renderer);
+    struct Entity player = createEntity(0, 50, windowWidth / 2, windowHight / 2, 32, 64, "res/gfx/guy.png", renderer);
+
+    //tiles
+    struct Tile tile1 = createTile(0, 0, 32, 32, "res/gfx/brick.png", renderer);
+    struct Tile tile2 = createTile(32, 0, 32, 32, "res/gfx/brick.png", renderer);
+    struct Tile tile3 = createTile(64, 0, 32, 32, "res/gfx/brick.png", renderer);
+    struct Tile tile4 = createTile(96, 0, 32, 32, "res/gfx/brick.png", renderer);
+    
+    //tile map
     struct TileMap tileMap = createTileMap();
-    addTile(&tileMap, &tile);
+    addTile(&tileMap, &tile1);
+    addTile(&tileMap, &tile2);
+    addTile(&tileMap, &tile3);
+    addTile(&tileMap, &tile4);
 
     struct Vec2 entPos = (struct Vec2){.x = windowWidth/2, .y = windowHight/2};
     struct Vec2 tilePos = (struct Vec2){.x = 800, .y = 290};
@@ -47,7 +57,7 @@ int main(int argc, char *args[])
     SDL_SetRenderDrawColor(renderer, 255, 255, 255, 255);
 
     /*game loop*/
-
+    SDL_SetRenderDrawColor(renderer, 200, 150, 250, 255);
     while (gameRunning)
     {
         timeStep = SDL_GetTicks(); // time in beginning of loop
@@ -77,9 +87,21 @@ int main(int argc, char *args[])
         {
             player.accel.x -= 5;
         }
+
+        if(keyState[SDL_SCANCODE_ESCAPE])
+        {
+            gameRunning = 0;
+        }
         
         /* update */
-        player.coords = detectCollisionPoint(player.accel, player.coords, tile.coords, tile.size);
+        player.accel = detectCollisionPoint(player.accel, player.coords, (struct Vec2){.x = player.dest.w, .y = player.dest.h}, tile1.coords, tile1.size);
+        player.accel = detectCollisionPoint(player.accel, player.coords, (struct Vec2){.x = player.dest.w, .y = player.dest.h}, tile3.coords, tile3.size);
+        player.accel = detectCollisionPoint(player.accel, player.coords, (struct Vec2){.x = player.dest.w, .y = player.dest.h}, tile4.coords, tile4.size);
+        player.accel = detectCollisionPoint(player.accel, player.coords, (struct Vec2){.x = player.dest.w, .y = player.dest.h}, tile2.coords, tile2.size);
+        
+        player.coords.x += player.accel.x;
+        player.coords.y += player.accel.y;
+
         player.accel.y = 0;
         player.accel.x = 0;
 
