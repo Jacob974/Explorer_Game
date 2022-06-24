@@ -26,13 +26,17 @@ int main(int argc, char *args[])
     SDL_Event pollEvent;
 
     // game objects
-    struct Entity player = createEntity(0, 50, windowWidth / 2, windowHight / 2, 32, 64, "res/gfx/guy.png", renderer);
+    struct Entity player = createEntity(0, 50, windowWidth / 2, windowHight / 2, 32, 64, "res/gfx/greenEntity.png", renderer);
 
     //tiles
-    struct Tile tile1 = createTile(0, 0, 32, 32, "res/gfx/brick.png", renderer);
-    struct Tile tile2 = createTile(32, 0, 32, 32, "res/gfx/brick.png", renderer);
-    struct Tile tile3 = createTile(64, 0, 32, 32, "res/gfx/brick.png", renderer);
-    struct Tile tile4 = createTile(96, 0, 32, 32, "res/gfx/brick.png", renderer);
+    struct Tile tile1 = createTile(0, 0, 32, 32,   "res/gfx/redTile.png", renderer);
+    struct Tile tile2 = createTile(32, 0, 32, 32,  "res/gfx/redTile.png", renderer);
+    struct Tile tile3 = createTile(64, 0, 32, 32,  "res/gfx/redTile.png", renderer);
+    struct Tile tile4 = createTile(96, 0, 32, 32,  "res/gfx/redTile.png", renderer);
+    struct Tile tile5 = createTile(96, 32, 32, 32, "res/gfx/redTile.png", renderer);
+    struct Tile tile6 = createTile(96, 64, 32, 32, "res/gfx/redTile.png", renderer);
+
+
     
     //tile map
     struct TileMap tileMap = createTileMap();
@@ -40,6 +44,8 @@ int main(int argc, char *args[])
     addTile(&tileMap, &tile2);
     addTile(&tileMap, &tile3);
     addTile(&tileMap, &tile4);
+    addTile(&tileMap, &tile5);
+    addTile(&tileMap, &tile6);
 
     struct Vec2 entPos = (struct Vec2){.x = windowWidth/2, .y = windowHight/2};
     struct Vec2 tilePos = (struct Vec2){.x = 800, .y = 290};
@@ -54,10 +60,9 @@ int main(int argc, char *args[])
     int frameLength = 1000 / 60; // times per milisecond
 
     // misc
-    SDL_SetRenderDrawColor(renderer, 255, 255, 255, 255);
 
     /*game loop*/
-    SDL_SetRenderDrawColor(renderer, 200, 150, 250, 255);
+    SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255);
     while (gameRunning)
     {
         timeStep = SDL_GetTicks(); // time in beginning of loop
@@ -92,13 +97,13 @@ int main(int argc, char *args[])
         {
             gameRunning = 0;
         }
-        
+
         /* update */
-        player.accel = detectCollisionPoint(player.accel, player.coords, (struct Vec2){.x = player.dest.w, .y = player.dest.h}, tile1.coords, tile1.size);
-        player.accel = detectCollisionPoint(player.accel, player.coords, (struct Vec2){.x = player.dest.w, .y = player.dest.h}, tile3.coords, tile3.size);
-        player.accel = detectCollisionPoint(player.accel, player.coords, (struct Vec2){.x = player.dest.w, .y = player.dest.h}, tile4.coords, tile4.size);
-        player.accel = detectCollisionPoint(player.accel, player.coords, (struct Vec2){.x = player.dest.w, .y = player.dest.h}, tile2.coords, tile2.size);
-        
+        for(int i = 0; i < tileMap.amountOfTiles; i++)
+        {
+            player.accel = detectCollisionPoint(player.accel, player.coords, (struct Vec2){.x = player.dest.w, .y = player.dest.h}, tileMap.tiles[i]->coords, tileMap.tiles[i]->size);    
+        }
+         
         player.coords.x += player.accel.x;
         player.coords.y += player.accel.y;
 
