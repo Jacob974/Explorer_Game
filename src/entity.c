@@ -16,6 +16,14 @@ struct Entity createEntity(int xCoord, int yCoord, int x, int y, int w, int h, c
 }
 struct Vec2 detectCollisionPoint(struct Vec2 entAccel, struct Vec2 entPos, struct Vec2 entSize, struct Vec2 tilePos, struct Vec2 tileSize)
 {
+    //
+    //
+    /* this function is based off of a tutorial from Javidx9, the video is https://www.youtube.com/watch?v=8JJ-4JgR7Dg */
+    //
+    //
+
+    struct Vec2 entityCollisionPoint = (struct Vec2){.x = entPos.x + entSize.x / 2, .y = entPos.y + entSize.y / 2}; //the center of the entity with the smaller rounded side to the left or the top
+
     int xNearCollisionPoint;
     int xFarCollisionPoint;
     int yNearCollisionPoint;
@@ -23,60 +31,46 @@ struct Vec2 detectCollisionPoint(struct Vec2 entAccel, struct Vec2 entPos, struc
 
     if(entAccel.x < 0)
     {
-        xNearCollisionPoint = tilePos.x + tileSize.x;
-        xFarCollisionPoint = tilePos.x;
+        xNearCollisionPoint = tilePos.x + tileSize.x + (entSize.x / 2); //half the entity's length is subtracted rounded down to compensate for the collion detection happening in the center of the entity
+        xFarCollisionPoint = tilePos.x - entSize.x + (entSize.x / 2); //half the entity's length is added rounded up to compensate for the collion detection happening in the center of the entity
     }
     else
     {
-        xNearCollisionPoint = tilePos.x;
-        xFarCollisionPoint = tilePos.x + tileSize.x;
+        xNearCollisionPoint = tilePos.x - entSize.x + (entSize.x / 2); //half the entity's length is added rounded up to compensate for the collion detection happening in the center of the entity
+        xFarCollisionPoint = tilePos.x + tileSize.x + (entSize.x / 2); //half the entity's length is subtracted rounded down to compensate for the collion detection happening in the center of the entity
     }
     if(entAccel.y < 0)
     {
-        yNearCollisionPoint = tilePos.y + tileSize.y;
-        yFarCollisionPoint = tilePos.y;
+        yNearCollisionPoint = tilePos.y + tileSize.y + (entSize.y / 2); //half the entity's length is subtracted rounded down to compensate for the collion detection happening in the center of the entity
+        yFarCollisionPoint = tilePos.y - entSize.y + (entSize.y / 2); //half the entity's length is added rounded up to compensate for the collion detection happening in the center of the entity
     }
     else
     {
-        yNearCollisionPoint = tilePos.y;
-        yFarCollisionPoint = tilePos.y + tileSize.y;
+        yNearCollisionPoint = tilePos.y - entSize.y + (entSize.y / 2); //half the entity's length is added rounded up to compensate for the collion detection happening in the center of the entity
+        yFarCollisionPoint = tilePos.y + tileSize.y + (entSize.y / 2); //half the entity's length is subtracted rounded down to compensate for the collion detection happening in the center of the entity
     }
 
-    struct Vec2 entityCorners[4];
-                entityCorners[0] = entPos;
-                entityCorners[1] = (struct Vec2){.x = entPos.x + entSize.x, .y = entPos.y};
-                entityCorners[2] = (struct Vec2){.x = entPos.x, .y = entPos.y + entSize.y};
-                entityCorners[3] = (struct Vec2){.x = entPos.x + entSize.x, .y = entPos.y + entSize.y};
-    
-    for(int i = 0; i < 4; i++)
+    /* how far along each vector the sides of the tile intersect with the vector*/
+    double xNearRatio = (double)(xNearCollisionPoint - entityCollisionPoint.x) / (double)(entAccel.x);
+    double xFarRatio  = (double)(xFarCollisionPoint - entityCollisionPoint.x) / (double)(entAccel.x);
+    double yNearRatio = (double)(yNearCollisionPoint - entityCollisionPoint.y) / (double)(entAccel.y);
+    double yFarRatio  = (double)(yFarCollisionPoint - entityCollisionPoint.y) / (double)(entAccel.y);
+
+    if((xNearRatio > yNearRatio) && (xNearRatio < yFarRatio) && (xNearRatio < 1.0) && (xNearRatio >= 0))//collides with verticle line
     {
-        int xItteratedAccel = entAccel.x;
-        int yItteratedAccel = entAccel.y;
-
-        /* how far along each vector the sides of the tile intersect with the vector*/
-        double xNearRatio = (double)(xNearCollisionPoint - entityCorners[i].x) / (double)(entAccel.x);
-        double xFarRatio  = (double)(xFarCollisionPoint - entityCorners[i].x) / (double)(entAccel.x);
-        double yNearRatio = (double)(yNearCollisionPoint - entityCorners[i].y) / (double)(entAccel.y);
-        double yFarRatio  = (double)(yFarCollisionPoint - entityCorners[i].y) / (double)(entAccel.y);
-
-        if((xNearRatio > yNearRatio) && (xNearRatio < yFarRatio) && (xNearRatio < 1.0) && (xNearRatio >= 0))//collides with verticle line
-        {
-            xItteratedAccel = xNearCollisionPoint - entityCorners[i].x;
-        }
-        else if((yNearRatio >= xNearRatio) && (yNearRatio < xFarRatio) && (yNearRatio < 1.0) && (yNearRatio >= 0))//collides with horizontel line
-        {
-            yItteratedAccel = yNearCollisionPoint - entityCorners[i].y;
-        }
-
-        if(xItteratedAccel * entAccel.x < entAccel.x * entAccel.x)
-        {
-            entAccel.x = xItteratedAccel;
-        }
-        if(yItteratedAccel * entAccel.y < entAccel.y * entAccel.y)
-        {
-            entAccel.y = yItteratedAccel;
-        }
+        entAccel.x = xNearCollisionPoint - entityCollisionPoint.x;
     }
+    else if((yNearRatio > xNearRatio) && (yNearRatio < xFarRatio) && (yNearRatio < 1.0) && (yNearRatio >= 0))//collides with horizontel line
+    {
+        entAccel.y = yNearCollisionPoint - entityCollisionPoint.y;
+    }
+    else if((xNearRatio == yNearRatio) && (yNearRatio < 1.0) && (yNearRatio >= 0)) //this is an edge case, might fix it at some point
+    {
+        entAccel.x = xNearCollisionPoint - entityCollisionPoint.x;
+        entAccel.y = yNearCollisionPoint - entityCollisionPoint.y;
+    }
+
+
     printf("done\n");
     return entAccel;
 }
