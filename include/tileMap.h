@@ -4,9 +4,11 @@
 #include <SDL2/SDL_image.h>
 
 #include "gameObjects.h"
- 
-struct Tile createTile(int xCoord, int yCoord, int w, int h, const char *imagePath, SDL_Renderer* ren);
-struct TileMap createTileMap();
-void addTile(struct TileMap* map, struct Tile* tile);
+
+struct TileMap createTileMap(SDL_Renderer* ren);
+
+void addTile(struct TileMap* map, int x, int y, int w, int h, const char* texture);
+void destroyTileMap(struct TileMap* tileMap);
+
 void updateTileMap(struct TileMap* tileMap, struct Entity* entity);
 void renderTileMap(struct TileMap* tileMap, SDL_Renderer* ren);

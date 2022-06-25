@@ -1,27 +1,30 @@
 #include "tileMap.h"
-#include <stdlib.h>
-
-struct Tile createTile(int xCoord, int yCoord, int w, int h, const char *imagePath, SDL_Renderer* ren)
-{
-    struct Tile temp;
-    temp.size.x = w; 
-    temp.size.y = h;
-    temp.coords.x = xCoord;
-    temp.coords.y = yCoord;
-    temp.texture = IMG_LoadTexture(ren, imagePath);
-
-    return temp;
-}
-struct TileMap createTileMap()
+#include "gameObjects.h"
+struct TileMap createTileMap(SDL_Renderer* ren)
 {
     struct TileMap tempMap;
     tempMap.amountOfTiles = 0;
+    tempMap.renderer = ren;
     return tempMap;
 }
-void addTile(struct TileMap* map, struct Tile* tile)
+void addTile(struct TileMap* map, int x, int y, int w, int h, const char* texture)
 {
+    struct Tile* tile = malloc(sizeof(struct Tile));
+    tile->size.x = w;
+    tile->size.y = h;
+    tile->coords.x = x;
+    tile->coords.y = y;
+    tile->texture = IMG_LoadTexture(map->renderer, texture);
+
     map->tiles[map->amountOfTiles] = tile;
-    map->amountOfTiles++;
+    map->amountOfTiles += 1;
+}
+void destroyTileMap(struct TileMap* tileMap)
+{
+    for(int i = 0; i < tileMap->amountOfTiles; i++)
+    {
+        free(tileMap->tiles[i]);
+    }
 }
 void updateTileMap(struct TileMap* tileMap, struct Entity* entity) 
 {   

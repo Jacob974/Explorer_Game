@@ -2,6 +2,8 @@
 #include <SDL2/SDL.h>
 #include <SDL2/SDL_image.h>
 
+#include <stdlib.h>
+
 struct Vec2
 {
     int x;
@@ -25,9 +27,10 @@ struct Tile
 struct TileMap
 {
     int amountOfTiles;
-
     int xOffset;
     int yOffset;
+
+    SDL_Renderer* renderer;
     
     struct Tile* tiles[10]; //a string of tiles
 };

@@ -18,7 +18,7 @@ struct Vec2 detectCollisionPoint(struct Vec2 entAccel, struct Vec2 entPos, struc
 {
     //
     //
-    /* this function is based off of a tutorial from Javidx9, the video is https://www.youtube.com/watch?v=8JJ-4JgR7Dg */
+    // this function is based off of a tutorial from Javidx9, the video is https://www.youtube.com/watch?v=8JJ-4JgR7Dg
     //
     //
 
@@ -69,8 +69,5 @@ struct Vec2 detectCollisionPoint(struct Vec2 entAccel, struct Vec2 entPos, struc
         entAccel.x = xNearCollisionPoint - entityCollisionPoint.x;
         entAccel.y = yNearCollisionPoint - entityCollisionPoint.y;
     }
-
-
-    printf("done\n");
     return entAccel;
 }

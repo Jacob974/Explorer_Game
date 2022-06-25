@@ -6,7 +6,6 @@
 #include "entity.h"
 #include "tileMap.h"
 
-#include "tempMap.h"
 
 int main(int argc, char *args[]) 
 {
@@ -26,30 +25,19 @@ int main(int argc, char *args[])
     SDL_Event pollEvent;
 
     // game objects
-    struct Entity player = createEntity(0, 50, windowWidth / 2, windowHight / 2, 32, 64, "res/gfx/greenEntity.png", renderer);
+    struct Entity player = createEntity(0, -100, windowWidth / 2, windowHight / 2, 32, 64, "res/gfx/greenEntity.png", renderer);
 
-    //tiles
-    struct Tile tile1 = createTile(0, 0, 32, 32,   "res/gfx/redTile.png", renderer);
-    struct Tile tile2 = createTile(32, 0, 32, 32,  "res/gfx/redTile.png", renderer);
-    struct Tile tile3 = createTile(64, 0, 32, 32,  "res/gfx/redTile.png", renderer);
-    struct Tile tile4 = createTile(96, 0, 32, 32,  "res/gfx/redTile.png", renderer);
-    struct Tile tile5 = createTile(96, 32, 32, 32, "res/gfx/redTile.png", renderer);
-    struct Tile tile6 = createTile(96, 64, 32, 32, "res/gfx/redTile.png", renderer);
-
-
+    //misc variables
+    int8_t pendingJump = 0;
     
     //tile map
-    struct TileMap tileMap = createTileMap();
-    addTile(&tileMap, &tile1);
-    addTile(&tileMap, &tile2);
-    addTile(&tileMap, &tile3);
-    addTile(&tileMap, &tile4);
-    addTile(&tileMap, &tile5);
-    addTile(&tileMap, &tile6);
-
-    struct Vec2 entPos = (struct Vec2){.x = windowWidth/2, .y = windowHight/2};
-    struct Vec2 tilePos = (struct Vec2){.x = 800, .y = 290};
-    struct Vec2 tileSize = (struct Vec2){.x = 32, .y = 32};
+    struct TileMap tileMap = createTileMap(renderer);
+    addTile(&tileMap, 0, 0, 32, 32,   "res/gfx/redTile.png");
+    addTile(&tileMap, 32, 0, 32, 32,  "res/gfx/redTile.png");
+    addTile(&tileMap, 64, 0, 32, 32,  "res/gfx/redTile.png");
+    addTile(&tileMap, 96, 0, 32, 32,  "res/gfx/redTile.png");
+    addTile(&tileMap, 96, 32, 32, 32, "res/gfx/redTile.png");
+    addTile(&tileMap, 96, 64, 32, 32, "res/gfx/redTile.png");
 
     struct Vec2 mouseCoords;
     const Uint8* keyState;
@@ -63,7 +51,7 @@ int main(int argc, char *args[])
 
     /*game loop*/
     SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255);
-    while (gameRunning)
+    while(gameRunning)
     {
         timeStep = SDL_GetTicks(); // time in beginning of loop
 
@@ -78,11 +66,11 @@ int main(int argc, char *args[])
         keyState = SDL_GetKeyboardState(NULL);
         if(keyState[SDL_SCANCODE_UP])
         {
-            player.accel.y -= 5;
+            pendingJump = 1;
         }
         if(keyState[SDL_SCANCODE_DOWN])
         {
-            player.accel.y += 5;
+            //player.accel.y += 5;
         }
         if(keyState[SDL_SCANCODE_RIGHT])
         {
@@ -92,10 +80,13 @@ int main(int argc, char *args[])
         {
             player.accel.x -= 5;
         }
-
         if(keyState[SDL_SCANCODE_ESCAPE])
         {
             gameRunning = 0;
+        }
+        if(keyState[SDL_SCANCODE_SPACE])
+        {
+            player.coords = (struct Vec2){.x = 32, .y = -100};
         }
 
         /* update */
@@ -107,7 +98,13 @@ int main(int argc, char *args[])
         player.coords.x += player.accel.x;
         player.coords.y += player.accel.y;
 
-        player.accel.y = 0;
+        if(pendingJump && player.accel.y == 0)
+        {
+            player.accel.y -= 10;
+        }
+        pendingJump = 0;
+
+        player.accel.y += 1;
         player.accel.x = 0;
 
         updateTileMap(&tileMap, &player);
@@ -140,7 +137,9 @@ int main(int argc, char *args[])
         }
     }
 
+    destroyTileMap(&tileMap);
     SDL_DestroyWindow(window);
     SDL_Quit();
+
     return 0;
 }
