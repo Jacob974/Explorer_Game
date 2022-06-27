@@ -19,4 +19,4 @@ struct Entity createEntity(int xCoord, int yCoord, int x, int y, int w, int h, c
  *
  *  @return a Vec2 of the coordinates where the vector intersects the tile
  */
-struct Vec2 detectCollisionPoint(struct Vec2 entAccel, struct Vec2 entPos, struct Vec2 entSize, struct Vec2 tilePos, struct Vec2 tileSize);
+void detectCollisionPoint(struct Entity* entity, struct TileMap* tileMap);

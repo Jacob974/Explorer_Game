@@ -90,10 +90,8 @@ int main(int argc, char *args[])
         }
 
         /* update */
-        for(int i = 0; i < tileMap.amountOfTiles; i++)
-        {
-            player.accel = detectCollisionPoint(player.accel, player.coords, (struct Vec2){.x = player.dest.w, .y = player.dest.h}, tileMap.tiles[i]->coords, tileMap.tiles[i]->size);    
-        }
+        detectCollisionPoint(&player, &tileMap);    
+        
          
         player.coords.x += player.accel.x;
         player.coords.y += player.accel.y;
