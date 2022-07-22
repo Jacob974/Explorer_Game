@@ -1,10 +1,10 @@
 #include "tileMap.h"
-#include "gameObjects.h"
 TileMap createTileMap(SDL_Renderer* ren)
 {
     TileMap tempMap;
     tempMap.amountOfTiles = 0;
     tempMap.renderer = ren;
+    tempMap.tiles;
     return tempMap;
 }
 void addTile(TileMap* map, int x, int y, int w, int h, const char* texture)

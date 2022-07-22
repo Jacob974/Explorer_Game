@@ -1,8 +1,10 @@
 #include <SDL2/SDL.h>
 #include <SDL2/SDL_image.h>
-#include <stdio.h>
 
-#include "gameObjects.h"
+#include <stdio.h>
+#include <stdlib.h>
+
+#include "datatypes.h"
 #include "entity.h"
 #include "tileMap.h"
 
@@ -24,36 +26,36 @@ int main(int argc, char *args[])
     SDL_Renderer *renderer = SDL_CreateRenderer(window, -1, SDL_RENDERER_ACCELERATED);
     SDL_Event pollEvent;
 
-    // game objects
+    // creates game objects
     Entity player = createEntity(0, -100, windowWidth / 2, windowHight / 2, 32, 64, "res/gfx/greenEntity.png", renderer);
+    TileMap tileMap = createTileMap(renderer); //this needs to be destroyed at the end of the program
 
     //misc variables
-    int8_t pendingJump = 0;
-    
-    //tile map
-    TileMap tileMap = createTileMap(renderer);
+    Sint8 pendingJump = 0;
+    Uint64 itterate = 0; //counts up each time the game update
+
+    //adds tiles to map
     addTile(&tileMap, 0, 0, 32, 32,   "res/gfx/redTile.png");
     addTile(&tileMap, 32, 0, 32, 32,  "res/gfx/redTile.png");
     addTile(&tileMap, 64, 0, 32, 32,  "res/gfx/redTile.png");
     addTile(&tileMap, 96, 0, 32, 32,  "res/gfx/redTile.png");
     addTile(&tileMap, 96, 32, 32, 32, "res/gfx/redTile.png");
     addTile(&tileMap, 96, 64, 32, 32, "res/gfx/redTile.png");
-
+    
+    //mouse and keyboard variables
     Vec2 mouseCoords;
     const Uint8* keyState;
 
-    // timestep variables
+    // game loop variables
     unsigned long timeStep = 0; 
     int fps = 60;
     int frameLength = 1000 / 60; // times per milisecond
-
-    // misc
 
     /*game loop*/
     SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255);
     while(gameRunning)
     {
-        timeStep = SDL_GetTicks(); // time in beginning of loop
+        timeStep = SDL_GetTicks(); //time in beginning of loop
 
         /*poll events*/
         SDL_PollEvent(&pollEvent);
@@ -90,8 +92,7 @@ int main(int argc, char *args[])
         }
 
         /* update */
-        detectCollisionPoint(&player, &tileMap);    
-        
+        detectCollisionPoint(&player, &tileMap);
          
         player.coords.x += player.accel.x;
         player.coords.y += player.accel.y;
@@ -133,6 +134,7 @@ int main(int argc, char *args[])
         {
             printf("xCoord: %d\n yCoord: %d\n\n", player.coords.x, player.coords.y);
         }
+        itterate++;
     }
 
     destroyTileMap(&tileMap);

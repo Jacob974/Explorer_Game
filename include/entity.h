@@ -3,7 +3,7 @@
 #include <SDL2/SDL.h>
 #include <SDL2/SDL_image.h>
 
-#include "gameObjects.h"
+#include "datatypes.h"
 #include "tileMap.h"
 /**
  * @brief Creates a Entity object
