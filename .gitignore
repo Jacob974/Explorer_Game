@@ -4,3 +4,5 @@ test.c
 *.o
 *.exe
 *.exec
+*.test
+*test.cpp
