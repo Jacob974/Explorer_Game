@@ -8,7 +8,7 @@
 /**
  * @brief Creates a Entity object
  */
-struct Entity createEntity(int xCoord, int yCoord, int x, int y, int w, int h, const char *filepath, SDL_Renderer *renderer);
+Entity createEntity(int xCoord, int yCoord, int x, int y, int w, int h, const char *filepath, SDL_Renderer *renderer);
 /**
  *  @brief the point at which an entity collides with a tile along a vector
  *
@@ -19,4 +19,4 @@ struct Entity createEntity(int xCoord, int yCoord, int x, int y, int w, int h, c
  *
  *  @return a Vec2 of the coordinates where the vector intersects the tile
  */
-void detectCollisionPoint(struct Entity* entity, struct TileMap* tileMap);
+void detectCollisionPoint(Entity* entity, TileMap* tileMap);

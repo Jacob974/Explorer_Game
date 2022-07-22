@@ -4,12 +4,12 @@
 
 #include <stdlib.h>
 
-struct Vec2
+typedef struct Vec2
 {
     int x;
     int y;
-};
-struct Entity
+} Vec2;
+typedef struct Entity
 { 
     //SDL_Rect source;
     SDL_Rect dest;
@@ -17,14 +17,14 @@ struct Entity
 
     struct Vec2 coords; //coords
     struct Vec2 accel; //accel
-};
-struct Tile 
+} Entity;
+typedef struct Tile 
 {
     struct Vec2 size;
     struct Vec2 coords;
     SDL_Texture* texture;
-};
-struct TileMap
+} Tile;
+typedef struct TileMap
 {
     int amountOfTiles;
     int xOffset;
@@ -33,4 +33,4 @@ struct TileMap
     SDL_Renderer* renderer;
     
     struct Tile* tiles[10]; //a string of tiles
-};
+} TileMap;

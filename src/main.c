@@ -25,13 +25,13 @@ int main(int argc, char *args[])
     SDL_Event pollEvent;
 
     // game objects
-    struct Entity player = createEntity(0, -100, windowWidth / 2, windowHight / 2, 32, 64, "res/gfx/greenEntity.png", renderer);
+    Entity player = createEntity(0, -100, windowWidth / 2, windowHight / 2, 32, 64, "res/gfx/greenEntity.png", renderer);
 
     //misc variables
     int8_t pendingJump = 0;
     
     //tile map
-    struct TileMap tileMap = createTileMap(renderer);
+    TileMap tileMap = createTileMap(renderer);
     addTile(&tileMap, 0, 0, 32, 32,   "res/gfx/redTile.png");
     addTile(&tileMap, 32, 0, 32, 32,  "res/gfx/redTile.png");
     addTile(&tileMap, 64, 0, 32, 32,  "res/gfx/redTile.png");
@@ -39,7 +39,7 @@ int main(int argc, char *args[])
     addTile(&tileMap, 96, 32, 32, 32, "res/gfx/redTile.png");
     addTile(&tileMap, 96, 64, 32, 32, "res/gfx/redTile.png");
 
-    struct Vec2 mouseCoords;
+    Vec2 mouseCoords;
     const Uint8* keyState;
 
     // timestep variables
@@ -86,7 +86,7 @@ int main(int argc, char *args[])
         }
         if(keyState[SDL_SCANCODE_SPACE])
         {
-            player.coords = (struct Vec2){.x = 32, .y = -100};
+            player.coords = (Vec2){.x = 32, .y = -100};
         }
 
         /* update */

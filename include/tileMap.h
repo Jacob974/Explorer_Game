@@ -5,10 +5,10 @@
 
 #include "gameObjects.h"
 
-struct TileMap createTileMap(SDL_Renderer* ren);
+TileMap createTileMap(SDL_Renderer* ren);
 
-void addTile(struct TileMap* map, int x, int y, int w, int h, const char* texture);
-void destroyTileMap(struct TileMap* tileMap);
+void addTile(TileMap* map, int x, int y, int w, int h, const char* texture);
+void destroyTileMap(TileMap* tileMap);
 
-void updateTileMap(struct TileMap* tileMap, struct Entity* entity);
-void renderTileMap(struct TileMap* tileMap, SDL_Renderer* ren);
+void updateTileMap(TileMap* tileMap, Entity* entity);
+void renderTileMap(TileMap* tileMap, SDL_Renderer* ren);

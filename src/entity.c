@@ -1,9 +1,9 @@
 #include "entity.h"
 #include <stdio.h>
 
-struct Entity createEntity(int xCoord, int yCoord, int x, int y, int w, int h, const char *filepath, SDL_Renderer *renderer)
+Entity createEntity(int xCoord, int yCoord, int x, int y, int w, int h, const char *filepath, SDL_Renderer *renderer)
 {
-    struct Entity temp;
+    Entity temp;
     temp.dest.x = x;
     temp.dest.y = y;
     temp.dest.w = w;
@@ -15,7 +15,7 @@ struct Entity createEntity(int xCoord, int yCoord, int x, int y, int w, int h, c
 
     return temp;
 }
-void detectCollisionPoint(struct Entity* entity, struct TileMap* tileMap)
+void detectCollisionPoint(Entity* entity, TileMap* tileMap)
 {
     //
     //
@@ -23,14 +23,14 @@ void detectCollisionPoint(struct Entity* entity, struct TileMap* tileMap)
     //
     //
 
-    struct Vec2 entityCollisionPoint = (struct Vec2){.x = entity->coords.x + entity->dest.w / 2, .y = entity->coords.y + entity->dest.h / 2}; //the center of the entity with the smaller rounded side to the left or the top
+    Vec2 entityCollisionPoint = (Vec2){.x = entity->coords.x + entity->dest.w / 2, .y = entity->coords.y + entity->dest.h / 2}; //the center of the entity with the smaller rounded side to the left or the top
 
     int xNearCollisionPoint;
     int xFarCollisionPoint;
     int yNearCollisionPoint;
     int yFarCollisionPoint;
 
-    struct Tile** laterSortedTiles = malloc(1);
+    Tile** laterSortedTiles = malloc(1);
     int laterSortedTilesSize = 0;
 
     for(int i = 0; i < tileMap->amountOfTiles; i++) 
@@ -74,7 +74,7 @@ void detectCollisionPoint(struct Entity* entity, struct TileMap* tileMap)
         {
             //adds it to a list for latercollision detection;
             laterSortedTilesSize++;
-            laterSortedTiles = realloc(laterSortedTiles, sizeof(struct Tile*) * laterSortedTilesSize);
+            laterSortedTiles = realloc(laterSortedTiles, sizeof(Tile*) * laterSortedTilesSize);
             laterSortedTiles[laterSortedTilesSize - 1] = tileMap->tiles[i];
         }
     }
