@@ -44,5 +44,5 @@ typedef struct TileMap
 
     SDL_Renderer* renderer;
     
-    Tile* tiles[10]; //a string of tiles
+    Tile** tiles; //a string of tiles
 } TileMap;

@@ -4,11 +4,12 @@ TileMap createTileMap(SDL_Renderer* ren)
     TileMap tempMap;
     tempMap.amountOfTiles = 0;
     tempMap.renderer = ren;
-    tempMap.tiles;
+    tempMap.tiles = malloc(1);
     return tempMap;
 }
 void addTile(TileMap* map, int x, int y, int w, int h, const char* texture)
 {
+    //creates a new tile
     Tile* tile = malloc(sizeof(Tile));
     tile->size.x = w;
     tile->size.y = h;
@@ -16,8 +17,9 @@ void addTile(TileMap* map, int x, int y, int w, int h, const char* texture)
     tile->coords.y = y;
     tile->texture = IMG_LoadTexture(map->renderer, texture);
 
-    map->tiles[map->amountOfTiles] = tile;
-    map->amountOfTiles += 1;
+    map->amountOfTiles++;
+    map->tiles = realloc(map->tiles, sizeof(Tile*) * map->amountOfTiles);
+    map->tiles[map->amountOfTiles -1] = tile;
 }
 void destroyTileMap(TileMap* tileMap)
 {
@@ -25,6 +27,7 @@ void destroyTileMap(TileMap* tileMap)
     {
         free(tileMap->tiles[i]);
     }
+    free(tileMap->tiles);
 }
 void updateTileMap(TileMap* tileMap, Entity* entity) 
 {   
