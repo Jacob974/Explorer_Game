@@ -27,20 +27,23 @@ int main(int argc, char *args[])
     SDL_Event pollEvent;
 
     // creates game objects
-    Entity player = createEntity(0, -100, windowWidth / 2, windowHight / 2, 32, 64, "res/gfx/greenEntity.png", renderer);
+    Entity player = createEntity(0, -100, windowWidth / 2, windowHight / 2, 32, 64, "res/gfx/man_in_suit.png", renderer);
+    SDL_Rect playerImageRect = (SDL_Rect){.x = 0, .y = 0, .w = 32, .h = 64};
     TileMap tileMap = createTileMap(renderer); //this needs to be destroyed at the end of the program
 
     //misc variables
     Sint8 pendingJump = 0;
-    Uint64 itterate = 0; //counts up each time the game update
+    Uint64 animationItterater = 0; //counts up each time the game update
+    int animationDelay; //how many updates before the animation updates
+    Uint8 animationDelayItterator; //counts down from animationDelay until it hits 0
 
     //adds tiles to map
-    addTile(&tileMap, 0, 0, 32, 32,   "res/gfx/redTile.png");
-    addTile(&tileMap, 32, 0, 32, 32,  "res/gfx/redTile.png");
-    addTile(&tileMap, 64, 0, 32, 32,  "res/gfx/redTile.png");
-    addTile(&tileMap, 96, 0, 32, 32,  "res/gfx/redTile.png");
-    addTile(&tileMap, 96, 32, 32, 32, "res/gfx/redTile.png");
-    addTile(&tileMap, 96, 64, 32, 32, "res/gfx/redTile.png");
+    addTile(&tileMap, 0, 0, 32, 32,   "res/gfx/brick.png");
+    addTile(&tileMap, 32, 0, 32, 32,  "res/gfx/brick.png");
+    addTile(&tileMap, 64, 0, 32, 32,  "res/gfx/brick.png");
+    addTile(&tileMap, 96, 0, 32, 32,  "res/gfx/brick.png");
+    addTile(&tileMap, 96, 32, 32, 32, "res/gfx/brick.png");
+    addTile(&tileMap, 96, 64, 32, 32, "res/gfx/brick.png");
     
     //mouse and keyboard variables
     Vec2 mouseCoords;
@@ -49,10 +52,12 @@ int main(int argc, char *args[])
     // game loop variables
     unsigned long timeStep = 0; 
     int fps = 60;
-    int frameLength = 1000 / 60; // times per milisecond
+    int frameLength = 1000 / fps; // times per milisecond
+    animationDelay = fps / 10;
+    printf("works to here\n");
 
     /*game loop*/
-    SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255);
+    SDL_SetRenderDrawColor(renderer, 0x87, 0xCE, 0xEB, 255);
     while(gameRunning)
     {
         timeStep = SDL_GetTicks(); //time in beginning of loop
@@ -104,18 +109,39 @@ int main(int argc, char *args[])
         pendingJump = 0;
 
         player.accel.y += 1;
+        playerImageRect.x = 32 * (animationItterater % 4);
+        if(player.accel.x < 0)
+        {
+            playerImageRect.y = 64;
+        }
+        else if(player.accel.x > 0)
+        {
+            playerImageRect.y = 128;
+        }
+        else
+        {
+            playerImageRect.y = 0;
+        }
+
         player.accel.x = 0;
 
         updateTileMap(&tileMap, &player);
+
+        animationDelayItterator--;
+        //updates the animation itterater
+        if(animationDelayItterator <= 0)
+        {
+            animationDelayItterator = animationDelay;
+            animationItterater++;
+        }
 
         /*render*/
 
         SDL_RenderClear(renderer);
 
         //renders the tile map
-        //renderTileMap(&tileMap, renderer);
         renderTileMap(&tileMap, renderer);
-        SDL_RenderCopy(renderer, player.texture, NULL, &player.dest);
+        SDL_RenderCopy(renderer, player.texture, &playerImageRect, &player.dest);
 
 
         SDL_RenderPresent(renderer);
@@ -134,7 +160,6 @@ int main(int argc, char *args[])
         {
             printf("xCoord: %d\n yCoord: %d\n\n", player.coords.x, player.coords.y);
         }
-        itterate++;
     }
 
     destroyTileMap(&tileMap);
