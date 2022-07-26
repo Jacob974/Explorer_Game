@@ -27,7 +27,7 @@ int main(int argc, char *args[])
     SDL_Event pollEvent;
 
     // creates game objects
-    Entity player = createEntity(0, -100, windowWidth / 2, windowHight / 2, 32, 64, "res/gfx/man_in_suit.png", renderer);
+    Entity player = createEntity(10, -100, windowWidth / 2, windowHight / 2, 32, 64, "res/gfx/man_in_suit.png", renderer);
     SDL_Rect playerImageRect = (SDL_Rect){.x = 0, .y = 0, .w = 32, .h = 64};
     TileMap tileMap = createTileMap(renderer); //this needs to be destroyed at the end of the program
 
@@ -38,12 +38,7 @@ int main(int argc, char *args[])
     Uint8 animationDelayItterator; //counts down from animationDelay until it hits 0
 
     //adds tiles to map
-    addTile(&tileMap, 0, 0, 32, 32,   "res/gfx/brick.png");
-    addTile(&tileMap, 32, 0, 32, 32,  "res/gfx/brick.png");
-    addTile(&tileMap, 64, 0, 32, 32,  "res/gfx/brick.png");
-    addTile(&tileMap, 96, 0, 32, 32,  "res/gfx/brick.png");
-    addTile(&tileMap, 96, 32, 32, 32, "res/gfx/brick.png");
-    addTile(&tileMap, 96, 64, 32, 32, "res/gfx/brick.png");
+    generateWorld(&tileMap, 2398457);
     
     //mouse and keyboard variables
     Vec2 mouseCoords;
@@ -54,6 +49,7 @@ int main(int argc, char *args[])
     int fps = 60;
     int frameLength = 1000 / fps; // times per milisecond
     animationDelay = fps / 10;
+    animationDelayItterator = animationDelay;
     printf("works to here\n");
 
     /*game loop*/

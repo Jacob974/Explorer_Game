@@ -12,3 +12,5 @@ void destroyTileMap(TileMap* tileMap);
 
 void updateTileMap(TileMap* tileMap, Entity* entity);
 void renderTileMap(TileMap* tileMap, SDL_Renderer* ren);
+
+void generateWorld(TileMap* tileMap, int seed);

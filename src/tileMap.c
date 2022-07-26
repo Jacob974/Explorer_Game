@@ -1,4 +1,6 @@
 #include "tileMap.h"
+#include <stdlib.h>
+#include <limits.h>
 TileMap createTileMap(SDL_Renderer* ren)
 {
     TileMap tempMap;
@@ -32,7 +34,7 @@ void destroyTileMap(TileMap* tileMap)
 void updateTileMap(TileMap* tileMap, Entity* entity) 
 {   
     //where to start rendering the ground from on the y is
-    tileMap->yOffset = entity->dest.y - entity->coords.y;
+    tileMap->yOffset = entity->dest.y - (entity->coords.y);
 
     //where to start rendering the ground from on the x is
     tileMap->xOffset = entity->dest.x - entity->coords.x ; 
@@ -49,4 +51,45 @@ void renderTileMap(TileMap* tileMap, SDL_Renderer* ren)
 
         SDL_RenderCopy(ren, tileMap->tiles[i]->texture, NULL, &renderingCoords);
     }  
+}
+void generateWorld(TileMap* tileMap, int seed)
+{
+    srand(seed);
+    Vec2 tilePos = (Vec2){.x = 0, .y = 64 + (rand() % 10)};
+    Sint8 grassItr = 0; //generates tiles in a straight line until it goes to 0, then it generates 1 above or bellow
+    Sint8 dirtItr = 0; //how far under the grass to generate dirt
+    for(int i = 0; i < 100; i++)
+    {
+        if(grassItr <= 0)
+        {
+            switch(rand() % 3)
+            {
+                case 2:
+                    tilePos.y -= 1;
+                    break;
+                case 1:
+                    tilePos.y += 1;
+                    break;
+                default:
+                    break;
+            }
+            grassItr = ((rand() % 5) + 1);
+        }
+        tilePos.x += 1;
+        addTile(tileMap, tilePos.x * 32, tilePos.y * 32, 32, 32, "res/gfx/grass.png");
+
+        // int yTilePos = tilePos.y - 1;
+
+        // for(int i = 0; i <= rand() % 2; i++) //generates dirt under the grass
+        // {
+        //     addTile(tileMap, tilePos.x * 32, yTilePos * 32, 32, 32, "res/gfx/dirt.png");
+        //     yTilePos--;
+        // }
+        // while(yTilePos > 0)
+        // {
+        //     addTile(tileMap, tilePos.x * 32, yTilePos * 32, 32, 32, "res/gfx/stone.png");
+
+        // }
+        grassItr--;
+    }
 }
