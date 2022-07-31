@@ -118,7 +118,6 @@ void detectCollisionPoint(Entity* entity, TileMap* tileMap)
         }
         else if((xNearRatio == yNearRatio) && (yNearRatio < 1.0) && (yNearRatio >= 0)) //this is an edge case, might fix it at some point
         {
-            entity->accel.x = xNearCollisionPoint - entityCollisionPoint.x;
             entity->accel.y = yNearCollisionPoint - entityCollisionPoint.y;
         }
     }

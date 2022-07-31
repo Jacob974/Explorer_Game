@@ -3,6 +3,7 @@
 
 #include <stdio.h>
 #include <stdlib.h>
+#include <time.h>
 
 #include "datatypes.h"
 #include "entity.h"
@@ -27,7 +28,7 @@ int main(int argc, char *args[])
     SDL_Event pollEvent;
 
     // creates game objects
-    Entity player = createEntity(10, -100, windowWidth / 2, windowHight / 2, 32, 64, "res/gfx/man_in_suit.png", renderer);
+    Entity player = createEntity(10, -300, windowWidth / 2, windowHight / 2, 32, 64, "res/gfx/man_in_suit.png", renderer);
     SDL_Rect playerImageRect = (SDL_Rect){.x = 0, .y = 0, .w = 32, .h = 64};
     TileMap tileMap = createTileMap(renderer); //this needs to be destroyed at the end of the program
 
@@ -39,7 +40,7 @@ int main(int argc, char *args[])
     Uint8 animationDelayItterator; //counts down from animationDelay until it hits 0
 
     //adds tiles to map
-    generateWorld(&tileMap, 2398457);
+    generateWorld(&tileMap, time(NULL));
     
     //mouse and keyboard variables
     Vec2 mouseCoords;
@@ -90,7 +91,7 @@ int main(int argc, char *args[])
         }
         if(keyState[SDL_SCANCODE_SPACE])
         {
-            player.coords = (Vec2){.x = 32, .y = -100};
+            player.coords = (Vec2){.x = 32, .y = -300};
         }
 
         /* update */
