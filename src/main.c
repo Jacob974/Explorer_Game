@@ -35,6 +35,7 @@ int main(int argc, char *args[])
     Sint8 pendingJump = 0;
     Uint64 animationItterater = 0; //counts up each time the game update
     int animationDelay; //how many updates before the animation updates
+    int prevAccel = 0; //prevous y accel of the player
     Uint8 animationDelayItterator; //counts down from animationDelay until it hits 0
 
     //adds tiles to map
@@ -93,12 +94,13 @@ int main(int argc, char *args[])
         }
 
         /* update */
+        prevAccel = player.accel.y;
         detectCollisionPoint(&player, &tileMap);
          
         player.coords.x += player.accel.x;
         player.coords.y += player.accel.y;
 
-        if(pendingJump && player.accel.y == 0)
+        if(pendingJump && player.accel.y == 0 && prevAccel > 0)
         {
             player.accel.y -= 10;
         }
