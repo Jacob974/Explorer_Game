@@ -1,10 +1,12 @@
-bin/main.exe: bin/main.o bin/entity.o bin/tileMap.o
-	gcc bin/*.o -o bin/main.exe -lSDL2main -lSDL2 -lSDL2_image
-bin/main.o: src/main.c
-	gcc -c src/main.c -O2 -I include -o bin/main.o
-bin/entity.o: src/entity.c
-	gcc -c src/entity.c -O2 -I include -o bin/entity.o
-bin/tileMap.o: src/tileMap.c
-	gcc -c src/tileMap.c -O2 -I include -o bin/tileMap.o
+CC=gcc
+TARGET=main.exec
+FLAGS=
+INCLUDE=include
+SRC=src
+
+$(TARGET): bin/main.o bin/entity.o bin/tileMap.o makefile
+	gcc bin/*.o -o $(TARGET) -lSDL2main -lSDL2 -lSDL2_image
+bin/%.o: src/%.c 
+	$(CC) $(FLAGS) -o $@ $^ -c -I $(INCLUDE)
 clean:
 	rm bin/*.o

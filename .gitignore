@@ -1,8 +1,7 @@
-.vscode
 test.c
-*.out
+test.cpp
 *.o
+*.out
 *.exe
 *.exec
-*.test
-*test.cpp
+*.vscode
