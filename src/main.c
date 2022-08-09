@@ -14,6 +14,7 @@ int main(int argc, char *args[])
 {
     SDL_Init(0);
 
+
     /*variables*/
 
     // window variables
@@ -27,8 +28,16 @@ int main(int argc, char *args[])
     SDL_Renderer *renderer = SDL_CreateRenderer(window, -1, SDL_RENDERER_ACCELERATED);
     SDL_Event pollEvent;
 
+    /*renders "Generating World" while world is loading*/
+    const char* generatingWorldPath = "res/gfx/generating_world.png";
+    SDL_Texture* generatingWorld = IMG_LoadTexture(renderer, generatingWorldPath);
+    
+    SDL_RenderClear(renderer);
+    SDL_RenderCopy(renderer, generatingWorld, NULL, NULL);
+    SDL_RenderPresent(renderer);
+
     // creates game objects
-    Entity player = createEntity(10, -300, windowWidth / 2, windowHight / 2, 32, 64, "res/gfx/man_in_suit.png", renderer);
+    Entity player = createEntity(32, -300, windowWidth / 2, windowHight / 2, 32, 64, "res/gfx/man_in_suit.png", renderer);
     SDL_Rect playerImageRect = (SDL_Rect){.x = 0, .y = 0, .w = 32, .h = 64};
     TileMap tileMap = createTileMap(renderer); //this needs to be destroyed at the end of the program
 

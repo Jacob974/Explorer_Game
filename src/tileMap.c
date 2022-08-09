@@ -58,6 +58,8 @@ void generateWorld(TileMap* tileMap, int seed)
     Vec2 tilePos = (Vec2){.x = 0, .y = -5 + (rand() % 10)};
     Sint8 grassItr = 0; //generates tiles in a straight line until it goes to 0, then it generates 1 above or bellow
     Sint8 dirtItr = 0; //how far under the grass to generate dirt
+
+    /*generates the grass*/
     for(int i = 0; i < 100; i++)
     {
         if(grassItr <= 0)
@@ -75,21 +77,32 @@ void generateWorld(TileMap* tileMap, int seed)
             }
             grassItr = ((rand() % 5) + 1);
         }
-        tilePos.x += 1;
+        tilePos.x++;
         addTile(tileMap, tilePos.x * 32, tilePos.y * 32, 32, 32, "res/gfx/grass.png");
 
-        // int yTilePos = tilePos.y - 1;
+        dirtItr = (rand() % 2) + 1;
+        int prevYTilePos = tilePos.y; //makes sure we can continue where we left off when it comes to generating the grass
+        
+        /*generates the dirt*/
+        for(int i = 0; i < dirtItr; i++)
+        {
+            tilePos.y++;
+            addTile(tileMap, tilePos.x * 32, tilePos.y * 32, 32, 32, "res/gfx/dirt.png");
+        }
 
-        // for(int i = 0; i <= rand() % 2; i++) //generates dirt under the grass
-        // {
-        //     addTile(tileMap, tilePos.x * 32, yTilePos * 32, 32, 32, "res/gfx/dirt.png");
-        //     yTilePos--;
-        // }
-        // while(yTilePos > 0)
-        // {
-        //     addTile(tileMap, tilePos.x * 32, yTilePos * 32, 32, 32, "res/gfx/stone.png");
+        /*generates the stone*/
+        while(tilePos.y < 30)
+        {
+            tilePos.y++;
+            addTile(tileMap, tilePos.x * 32, tilePos.y * 32, 32, 32, "res/gfx/stone.png");
+        }
 
-        // }
+        tilePos.y = prevYTilePos;
         grassItr--;
+    }
+    for(int i = 0; i < 20; i++) //generates some bricks
+    {
+        tilePos.x++;
+        addTile(tileMap, tilePos.x * 32, tilePos.y * 32, 32, 32, "res/gfx/brick.png");
     }
 }

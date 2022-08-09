@@ -11,6 +11,9 @@ Entity createEntity(int xCoord, int yCoord, int x, int y, int w, int h, const ch
 
     temp.coords.x = xCoord;
     temp.coords.y = yCoord;
+
+    temp.accel.x = 0;
+    temp.accel.y = 0;
     temp.texture = IMG_LoadTexture(renderer, filepath);
 
     return temp;
@@ -122,4 +125,13 @@ void detectCollisionPoint(Entity* entity, TileMap* tileMap)
         }
     }
     free(laterSortedTiles);
+}
+void moveEntity(Entity* entity, int movement, Sint8 jump)
+{
+    entity->accel.x += movement;//changes the x movement apropriatly
+    if(entity->prevAcccel > 0 && entity->accel.y == 0 && jump) //if a valid jump has occered
+    {
+        entity->accel.y -= 10;
+    }
+    entity->accel.y += 1; //gravity
 }

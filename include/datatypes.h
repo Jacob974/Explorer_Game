@@ -23,6 +23,8 @@ typedef struct Entity
 
     Vec2 coords; //coords
     Vec2 accel; //accel
+
+    int prevAcccel; //needed for jumping
 } Entity;
 /**
  *  @brief a datatype that holds data about an tile including possition, size, texture
@@ -33,6 +35,14 @@ typedef struct Tile
     Vec2 coords;
     SDL_Texture* texture;
 } Tile;
+/**
+ *  @brief a datatype that holds data about an item which can be on the groun sometimes
+ */
+typedef struct Item
+{
+    SDL_Texture* texture;
+    Vec2 pos;
+} Item;
 /**
  *  @brief a datatype that holds a list of tiles and info about them
  */
