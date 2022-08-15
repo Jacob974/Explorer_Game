@@ -126,12 +126,3 @@ void detectCollisionPoint(Entity* entity, TileMap* tileMap)
     }
     free(laterSortedTiles);
 }
-void moveEntity(Entity* entity, int movement, Sint8 jump)
-{
-    entity->accel.x += movement;//changes the x movement apropriatly
-    if(entity->prevAcccel > 0 && entity->accel.y == 0 && jump) //if a valid jump has occered
-    {
-        entity->accel.y -= 10;
-    }
-    entity->accel.y += 1; //gravity
-}

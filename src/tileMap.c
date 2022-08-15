@@ -55,12 +55,12 @@ void renderTileMap(TileMap* tileMap, SDL_Renderer* ren)
 void generateWorld(TileMap* tileMap, int seed)
 {
     srand(seed);
-    Vec2 tilePos = (Vec2){.x = 0, .y = -5 + (rand() % 10)};
+    Vec2 tilePos = (Vec2){.x = 0, .y = 5};
     Sint8 grassItr = 0; //generates tiles in a straight line until it goes to 0, then it generates 1 above or bellow
     Sint8 dirtItr = 0; //how far under the grass to generate dirt
 
     /*generates the grass*/
-    for(int i = 0; i < 100; i++)
+    for(int i = 0; i < 1000; i++)
     {
         if(grassItr <= 0)
         {

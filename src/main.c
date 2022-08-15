@@ -14,7 +14,6 @@ int main(int argc, char *args[])
 {
     SDL_Init(0);
 
-
     /*variables*/
 
     // window variables
@@ -37,7 +36,7 @@ int main(int argc, char *args[])
     SDL_RenderPresent(renderer);
 
     // creates game objects
-    Entity player = createEntity(32, -300, windowWidth / 2, windowHight / 2, 32, 64, "res/gfx/man_in_suit.png", renderer);
+    Entity player = createEntity(32, -64, windowWidth / 2, windowHight / 2, 32, 64, "res/gfx/man_in_suit.png", renderer);
     SDL_Rect playerImageRect = (SDL_Rect){.x = 0, .y = 0, .w = 32, .h = 64};
     TileMap tileMap = createTileMap(renderer); //this needs to be destroyed at the end of the program
 
@@ -61,7 +60,6 @@ int main(int argc, char *args[])
     int frameLength = 1000 / fps; // times per milisecond
     animationDelay = fps / 10;
     animationDelayItterator = animationDelay;
-    printf("works to here\n");
 
     /*game loop*/
     SDL_SetRenderDrawColor(renderer, 0x87, 0xCE, 0xEB, 255);
@@ -100,7 +98,7 @@ int main(int argc, char *args[])
         }
         if(keyState[SDL_SCANCODE_SPACE])
         {
-            player.coords = (Vec2){.x = 32, .y = -300};
+            player.coords = (Vec2){.x = 32, .y = 0};
         }
 
         /* update */
