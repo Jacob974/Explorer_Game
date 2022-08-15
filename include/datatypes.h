@@ -47,6 +47,11 @@ typedef struct Item
  */
 typedef struct TileMap
 {
+    Tile** tileList;
+
+    int tileMapWidth;
+    int tileMapHight;
+
     int amountOfTiles;
     int xOffset;
     int yOffset;
