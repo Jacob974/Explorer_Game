@@ -1,7 +1,7 @@
 #include "tileMap.h"
 #include <stdlib.h>
 #include <limits.h>
-TileMap createTileMap(SDL_Renderer* ren)
+TileMap createTileMap(SDL_Renderer* ren, int width, int hight)
 {
     TileMap tempMap;
     tempMap.amountOfTiles = 0;
@@ -9,12 +9,10 @@ TileMap createTileMap(SDL_Renderer* ren)
     tempMap.tiles = malloc(1);
     return tempMap;
 }
-void addTile(TileMap* map, int x, int y, int w, int h, const char* texture)
+void addTile(TileMap* map, int x, int y, const char* texture)
 {
     //creates a new tile
     Tile* tile = malloc(sizeof(Tile));
-    tile->size.x = w;
-    tile->size.y = h;
     tile->coords.x = x;
     tile->coords.y = y;
     tile->texture = IMG_LoadTexture(map->renderer, texture);
@@ -44,10 +42,10 @@ void renderTileMap(TileMap* tileMap, SDL_Renderer* ren)
     for(int i = 0; i < tileMap->amountOfTiles; i++)
     {
         SDL_Rect renderingCoords; //turns the size and possition into an ASL_Rect
-        renderingCoords.x = tileMap->tiles[i]->coords.x + tileMap->xOffset;
-        renderingCoords.y = tileMap->tiles[i]->coords.y + tileMap->yOffset;
-        renderingCoords.h = tileMap->tiles[i]->size.y;
-        renderingCoords.w = tileMap->tiles[i]->size.x;
+        renderingCoords.x = tileMap->tiles[i]->coords.x * 32 + tileMap->xOffset;
+        renderingCoords.y = tileMap->tiles[i]->coords.y * 32 + tileMap->yOffset;
+        renderingCoords.h = 32;
+        renderingCoords.w = 32;
 
         SDL_RenderCopy(ren, tileMap->tiles[i]->texture, NULL, &renderingCoords);
     }  
@@ -78,7 +76,7 @@ void generateWorld(TileMap* tileMap, int seed)
             grassItr = ((rand() % 5) + 1);
         }
         tilePos.x++;
-        addTile(tileMap, tilePos.x * 32, tilePos.y * 32, 32, 32, "res/gfx/grass.png");
+        addTile(tileMap, tilePos.x, tilePos.y, "res/gfx/grass.png");
 
         dirtItr = (rand() % 2) + 1;
         int prevYTilePos = tilePos.y; //makes sure we can continue where we left off when it comes to generating the grass
@@ -87,14 +85,14 @@ void generateWorld(TileMap* tileMap, int seed)
         for(int i = 0; i < dirtItr; i++)
         {
             tilePos.y++;
-            addTile(tileMap, tilePos.x * 32, tilePos.y * 32, 32, 32, "res/gfx/dirt.png");
+            addTile(tileMap, tilePos.x, tilePos.y, "res/gfx/dirt.png");
         }
 
         /*generates the stone*/
         while(tilePos.y < 30)
         {
             tilePos.y++;
-            addTile(tileMap, tilePos.x * 32, tilePos.y * 32, 32, 32, "res/gfx/stone.png");
+            addTile(tileMap, tilePos.x, tilePos.y, "res/gfx/stone.png");
         }
 
         tilePos.y = prevYTilePos;
@@ -103,6 +101,6 @@ void generateWorld(TileMap* tileMap, int seed)
     for(int i = 0; i < 20; i++) //generates some bricks
     {
         tilePos.x++;
-        addTile(tileMap, tilePos.x * 32, tilePos.y * 32, 32, 32, "res/gfx/brick.png");
+        addTile(tileMap, tilePos.x, tilePos.y, "res/gfx/brick.png");
     }
 }

@@ -40,23 +40,23 @@ void detectCollisionPoint(Entity* entity, TileMap* tileMap)
     {
         if(entity->accel.x < 0)
         {
-            xNearCollisionPoint = tileMap->tiles[i]->coords.x + tileMap->tiles[i]->size.x + (entity->dest.w / 2); //half the entity's length is subtracted rounded down to compensate for the collion detection happening in the center of the entity
-            xFarCollisionPoint = tileMap->tiles[i]->coords.x - entity->dest.w + (entity->dest.w / 2); //half the entity's length is added rounded up to compensate for the collion detection happening in the center of the entity
+            xNearCollisionPoint = tileMap->tiles[i]->coords.x * 32 + 32 + (entity->dest.w / 2); //half the entity's length is subtracted rounded down to compensate for the collion detection happening in the center of the entity
+            xFarCollisionPoint = tileMap->tiles[i]->coords.x * 32 - entity->dest.w + (entity->dest.w / 2); //half the entity's length is added rounded up to compensate for the collion detection happening in the center of the entity
         }
         else
         {
-            xNearCollisionPoint = tileMap->tiles[i]->coords.x - entity->dest.w + (entity->dest.w / 2); //half the entity's length is added rounded up to compensate for the collion detection happening in the center of the entity
-            xFarCollisionPoint = tileMap->tiles[i]->coords.x + tileMap->tiles[i]->size.x + (entity->dest.w / 2); //half the entity's length is subtracted rounded down to compensate for the collion detection happening in the center of the entity
+            xNearCollisionPoint = tileMap->tiles[i]->coords.x * 32 - entity->dest.w + (entity->dest.w / 2); //half the entity's length is added rounded up to compensate for the collion detection happening in the center of the entity
+            xFarCollisionPoint = tileMap->tiles[i]->coords.x * 32 + 32 + (entity->dest.w / 2); //half the entity's length is subtracted rounded down to compensate for the collion detection happening in the center of the entity
         }
         if(entity->accel.y < 0)
         {
-            yNearCollisionPoint = tileMap->tiles[i]->coords.y + tileMap->tiles[i]->size.y + (entity->dest.h / 2); //half the entity's length is subtracted rounded down to compensate for the collion detection happening in the center of the entity
-            yFarCollisionPoint = tileMap->tiles[i]->coords.y - entity->dest.h + (entity->dest.h / 2); //half the entity's length is added rounded up to compensate for the collion detection happening in the center of the entity
+            yNearCollisionPoint = tileMap->tiles[i]->coords.y * 32 + 32 + (entity->dest.h / 2); //half the entity's length is subtracted rounded down to compensate for the collion detection happening in the center of the entity
+            yFarCollisionPoint = tileMap->tiles[i]->coords.y * 32 - entity->dest.h + (entity->dest.h / 2); //half the entity's length is added rounded up to compensate for the collion detection happening in the center of the entity
         }
         else
         {
-            yNearCollisionPoint = tileMap->tiles[i]->coords.y - entity->dest.h + (entity->dest.h / 2); //half the entity's length is added rounded up to compensate for the collion detection happening in the center of the entity
-            yFarCollisionPoint = tileMap->tiles[i]->coords.y + tileMap->tiles[i]->size.y + (entity->dest.h / 2); //half the entity's length is subtracted rounded down to compensate for the collion detection happening in the center of the entity
+            yNearCollisionPoint = tileMap->tiles[i]->coords.y * 32 - entity->dest.h + (entity->dest.h / 2); //half the entity's length is added rounded up to compensate for the collion detection happening in the center of the entity
+            yFarCollisionPoint = tileMap->tiles[i]->coords.y * 32 + 32 + (entity->dest.h / 2); //half the entity's length is subtracted rounded down to compensate for the collion detection happening in the center of the entity
         }
 
         /* how far along each vector the sides of the tile intersect with the vector*/
@@ -86,23 +86,23 @@ void detectCollisionPoint(Entity* entity, TileMap* tileMap)
         //yeah i know im copying and pasting code, Ill prob deal with it later
         if(entity->accel.x < 0)
         {
-            xNearCollisionPoint = laterSortedTiles[i]->coords.x + laterSortedTiles[i]->size.x + (entity->dest.w / 2); //half the entity's length is subtracted rounded down to compensate for the collion detection happening in the center of the entity
-            xFarCollisionPoint = laterSortedTiles[i]->coords.x - entity->dest.w + (entity->dest.w / 2); //half the entity's length is added rounded up to compensate for the collion detection happening in the center of the entity
+            xNearCollisionPoint = laterSortedTiles[i]->coords.x * 32 + 32 + (entity->dest.w / 2); //half the entity's length is subtracted rounded down to compensate for the collion detection happening in the center of the entity
+            xFarCollisionPoint = laterSortedTiles[i]->coords.x * 32 - entity->dest.w + (entity->dest.w / 2); //half the entity's length is added rounded up to compensate for the collion detection happening in the center of the entity
         }
         else
         {
-            xNearCollisionPoint = laterSortedTiles[i]->coords.x - entity->dest.w + (entity->dest.w / 2); //half the entity's length is added rounded up to compensate for the collion detection happening in the center of the entity
-            xFarCollisionPoint = laterSortedTiles[i]->coords.x + laterSortedTiles[i]->size.x + (entity->dest.w / 2); //half the entity's length is subtracted rounded down to compensate for the collion detection happening in the center of the entity
+            xNearCollisionPoint = laterSortedTiles[i]->coords.x * 32 - entity->dest.w + (entity->dest.w / 2); //half the entity's length is added rounded up to compensate for the collion detection happening in the center of the entity
+            xFarCollisionPoint = laterSortedTiles[i]->coords.x * 32 + 32 + (entity->dest.w / 2); //half the entity's length is subtracted rounded down to compensate for the collion detection happening in the center of the entity
         }
         if(entity->accel.y < 0)
         {
-            yNearCollisionPoint = laterSortedTiles[i]->coords.y + laterSortedTiles[i]->size.y + (entity->dest.h / 2); //half the entity's length is subtracted rounded down to compensate for the collion detection happening in the center of the entity
-            yFarCollisionPoint = laterSortedTiles[i]->coords.y - entity->dest.h + (entity->dest.h / 2); //half the entity's length is added rounded up to compensate for the collion detection happening in the center of the entity
+            yNearCollisionPoint = laterSortedTiles[i]->coords.y * 32 + 32 + (entity->dest.h / 2); //half the entity's length is subtracted rounded down to compensate for the collion detection happening in the center of the entity
+            yFarCollisionPoint = laterSortedTiles[i]->coords.y * 32 - entity->dest.h + (entity->dest.h / 2); //half the entity's length is added rounded up to compensate for the collion detection happening in the center of the entity
         }
         else
         {
-            yNearCollisionPoint = laterSortedTiles[i]->coords.y - entity->dest.h + (entity->dest.h / 2); //half the entity's length is added rounded up to compensate for the collion detection happening in the center of the entity
-            yFarCollisionPoint = laterSortedTiles[i]->coords.y + laterSortedTiles[i]->size.y + (entity->dest.h / 2); //half the entity's length is subtracted rounded down to compensate for the collion detection happening in the center of the entity
+            yNearCollisionPoint = laterSortedTiles[i]->coords.y * 32 - entity->dest.h + (entity->dest.h / 2); //half the entity's length is added rounded up to compensate for the collion detection happening in the center of the entity
+            yFarCollisionPoint = laterSortedTiles[i]->coords.y * 32 + 32 + (entity->dest.h / 2); //half the entity's length is subtracted rounded down to compensate for the collion detection happening in the center of the entity
         }
 
         /* how far along each vector the sides of the tile intersect with the vector*/

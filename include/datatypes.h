@@ -31,7 +31,6 @@ typedef struct Entity
  */
 typedef struct Tile 
 {
-    Vec2 size;
     Vec2 coords;
     SDL_Texture* texture;
 } Tile;
