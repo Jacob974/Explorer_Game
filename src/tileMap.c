@@ -5,11 +5,6 @@ TileMap createTileMap(SDL_Renderer* ren, int width, int hight)
 {
     TileMap tempMap;
 
-    //new code
-    tempMap.tileMapWidth = width;
-    tempMap.tileMapHight = hight;
-    tempMap.tileList = malloc(width * hight * sizeof(Tile*));
-
     tempMap.amountOfTiles = 0;
     tempMap.renderer = ren;
     tempMap.tiles = malloc(1);
@@ -27,24 +22,12 @@ void addTile(TileMap* tileMap, int x, int y, const char* texture)
     tileMap->amountOfTiles++;
     tileMap->tiles = realloc(tileMap->tiles, sizeof(Tile*) * tileMap->amountOfTiles);
     tileMap->tiles[tileMap->amountOfTiles -1] = tile;
-
-    //new code
-    if(x >= 0 && y >= 0 && x < tileMap->tileMapWidth && y < tileMap->tileMapHight)
-    {
-        Tile* currentTile = malloc(sizeof(Tile*));
-        currentTile->texture = IMG_LoadTexture(tileMap->renderer, texture);
-        tileMap->tileList[tileMap->tileMapHight * x + y] = currentTile;
-    }
-    else
-    {
-        printf("failed to generate tile at %d, %d\n", x, y);
-    }
 }
 void destroyTileMap(TileMap* tileMap)
 {
     for(int i = 0; i < tileMap->amountOfTiles; i++)
     {
-        free(tileMap->tiles[i]);
+        //free(tileMap->tiles[i]);
     }
     free(tileMap->tiles);
 }
@@ -60,13 +43,16 @@ void renderTileMap(TileMap* tileMap, SDL_Renderer* ren)
 {
     for(int i = 0; i < tileMap->amountOfTiles; i++)
     {
-        SDL_Rect renderingCoords; //turns the size and possition into an ASL_Rect
+        SDL_Rect renderingCoords; //turns the size and possition into an SDL_Rect
         renderingCoords.x = tileMap->tiles[i]->coords.x * 32 + tileMap->xOffset;
         renderingCoords.y = tileMap->tiles[i]->coords.y * 32 + tileMap->yOffset;
-        renderingCoords.h = 32;
-        renderingCoords.w = 32;
-
-        SDL_RenderCopy(ren, tileMap->tiles[i]->texture, NULL, &renderingCoords);
+        if(renderingCoords.x < 1500 && renderingCoords.y < 1000 && renderingCoords.x > -32 && renderingCoords.y > -32)
+        {
+            renderingCoords.h = 32;
+            renderingCoords.w = 32;
+    
+            SDL_RenderCopy(ren, tileMap->tiles[i]->texture, NULL, &renderingCoords);
+        }
     }  
 }
 void generateWorld(TileMap* tileMap, int seed)

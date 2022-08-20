@@ -9,7 +9,6 @@
 #include "entity.h"
 #include "tileMap.h"
 
-
 int main(int argc, char *args[]) 
 {
     SDL_Init(0);
@@ -36,7 +35,7 @@ int main(int argc, char *args[])
     SDL_RenderPresent(renderer);
 
     // creates game objects
-    Entity player = createEntity(32, -64, windowWidth / 2, windowHight / 2, 32, 64, "res/gfx/man_in_suit.png", renderer);
+    Entity player = createEntity(0, -64, windowWidth / 2, windowHight / 2, 32, 64, "res/gfx/man_in_suit.png", renderer);
     SDL_Rect playerImageRect = (SDL_Rect){.x = 0, .y = 0, .w = 32, .h = 64};
     TileMap tileMap = createTileMap(renderer, 1000, 50); //this needs to be destroyed at the end of the program
 
