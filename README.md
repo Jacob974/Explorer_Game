@@ -33,6 +33,7 @@ This is a 2D game I'm making with SDL. It will be an open world game where you c
      ```
      sudo apt-get install libsdl2-2.0
      sudo apt-get install libsdl2-dev
+     sudo apt-get install libsdl2-image-dev
      ```
 * Other Linux Distros
     * The installation process for other distros is more or less the same as with Debian/Ubuntu. Just make sure you're using the correct package manager

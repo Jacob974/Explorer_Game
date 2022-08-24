@@ -1,6 +1,6 @@
 CC=gcc
 TARGET=main.exec
-FLAGS=
+FLAGS= -Wall
 INCLUDE=include
 SRC=src
 

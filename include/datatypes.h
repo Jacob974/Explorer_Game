@@ -31,7 +31,9 @@ typedef struct Entity
  */
 typedef struct Tile 
 {
+    Sint8 exists; //whether or not the tile should be ignored or not
     Vec2 coords;
+    SDL_Rect renderingCoords; //holds the coords of where to render the tile
     SDL_Texture* texture;
 } Tile;
 /**
@@ -47,11 +49,13 @@ typedef struct Item
  */
 typedef struct TileMap
 {
-    int amountOfTiles;
+    Tile* tileList;
+
+    int tileWidth;
+    int tileHight;
+
     int xOffset;
     int yOffset;
 
     SDL_Renderer* renderer;
-    
-    Tile** tiles; //a string of tiles
 } TileMap;

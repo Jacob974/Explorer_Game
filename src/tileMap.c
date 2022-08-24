@@ -3,57 +3,118 @@
 #include <limits.h>
 TileMap createTileMap(SDL_Renderer* ren, int width, int hight)
 {
-    TileMap tempMap;
+    // TileMap tempMap;
 
-    tempMap.amountOfTiles = 0;
-    tempMap.renderer = ren;
-    tempMap.tiles = malloc(1);
+    // tempMap.amountOfTiles = 0;
+    // tempMap.renderer = ren;
+    // tempMap.tiles = malloc(1);
 
-    return tempMap;
+    // return tempMap;
+
+    TileMap tileMap;
+
+    tileMap.renderer = ren;
+    tileMap.tileHight = hight;
+    tileMap.tileWidth = width;
+
+    tileMap.tileList = malloc(sizeof(Tile) * width * hight);
+
+    tileMap.xOffset = 0;
+    tileMap.yOffset = 0;
+
+    return tileMap;
 }
 void addTile(TileMap* tileMap, int x, int y, const char* texture)
 {
     //creates a new tile
-    Tile* tile = malloc(sizeof(Tile));
-    tile->coords.x = x;
-    tile->coords.y = y;
-    tile->texture = IMG_LoadTexture(tileMap->renderer, texture);
+    // Tile* tile = malloc(sizeof(Tile));
+    // tile->coords.x = x;
+    // tile->coords.y = y;
+    // tile->texture = IMG_LoadTexture(tileMap->renderer, texture);
 
-    tileMap->amountOfTiles++;
-    tileMap->tiles = realloc(tileMap->tiles, sizeof(Tile*) * tileMap->amountOfTiles);
-    tileMap->tiles[tileMap->amountOfTiles -1] = tile;
+    // tileMap->amountOfTiles++;
+    // tileMap->tiles = realloc(tileMap->tiles, sizeof(Tile*) * tileMap->amountOfTiles);
+    // tileMap->tiles[tileMap->amountOfTiles -1] = tile;
+
+    //new code
+    if(x >= 0 && y >= 0 && x < tileMap->tileWidth && y < tileMap->tileHight)
+    {
+        int inc = tileMap->tileHight * x + y;
+        tileMap->tileList[inc].coords.x = x;
+        tileMap->tileList[inc].coords.y = y;
+
+        tileMap->tileList[inc].exists = 1;
+        tileMap->tileList[inc].texture = IMG_LoadTexture(tileMap->renderer, texture);
+    }
+    else
+    {
+        printf("failed to generate tile\n");
+    }
 }
 void destroyTileMap(TileMap* tileMap)
 {
-    for(int i = 0; i < tileMap->amountOfTiles; i++)
+    for(int i = 0; i < tileMap->tileWidth; i++)
     {
-        //free(tileMap->tiles[i]);
+        for(int j = 0; j < tileMap->tileHight; j++)
+        {
+            destroyTile(tileMap, &(Vec2){.x = i, .y = j});
+        }
     }
-    free(tileMap->tiles);
+    free(tileMap->tileList);
 }
 void updateTileMap(TileMap* tileMap, Entity* entity) 
 {   
     //where to start rendering the ground from on the y is
-    tileMap->yOffset = entity->dest.y - (entity->coords.y);
+    tileMap->yOffset = entity->dest.y - entity->coords.y;
 
     //where to start rendering the ground from on the x is
     tileMap->xOffset = entity->dest.x - entity->coords.x ; 
 }
 void renderTileMap(TileMap* tileMap, SDL_Renderer* ren)
 {
-    for(int i = 0; i < tileMap->amountOfTiles; i++)
+    // for(int i = 0; i < tileMap->amountOfTiles; i++)
+    // {
+    //     SDL_Rect renderingCoords; //turns the size and possition into an SDL_Rect
+    //     renderingCoords.x = tileMap->tiles[i]->coords.x * 32 + tileMap->xOffset;
+    //     renderingCoords.y = tileMap->tiles[i]->coords.y * 32 + tileMap->yOffset;
+    //     if(renderingCoords.x < 1500 && renderingCoords.y < 1000 && renderingCoords.x > -32 && renderingCoords.y > -32)
+    //     {
+    //         renderingCoords.h = 32;
+    //         renderingCoords.w = 32;
+    
+    //         SDL_RenderCopy(ren, tileMap->tiles[i]->texture, NULL, &renderingCoords);
+    //     }
+    // }
+    for(int i = 0; i < tileMap->tileHight * tileMap->tileWidth; i++)
     {
-        SDL_Rect renderingCoords; //turns the size and possition into an SDL_Rect
-        renderingCoords.x = tileMap->tiles[i]->coords.x * 32 + tileMap->xOffset;
-        renderingCoords.y = tileMap->tiles[i]->coords.y * 32 + tileMap->yOffset;
-        if(renderingCoords.x < 1500 && renderingCoords.y < 1000 && renderingCoords.x > -32 && renderingCoords.y > -32)
+        if((tileMap->tileList[i].exists == 1) && &tileMap->tileList[i].texture != NULL)
         {
+            SDL_Rect renderingCoords;
             renderingCoords.h = 32;
             renderingCoords.w = 32;
-    
-            SDL_RenderCopy(ren, tileMap->tiles[i]->texture, NULL, &renderingCoords);
+            renderingCoords.x = tileMap->tileList[i].coords.x * 32 + tileMap->xOffset;
+            renderingCoords.y = tileMap->tileList[i].coords.y * 32 + tileMap->yOffset;
+
+            SDL_RenderCopy(tileMap->renderer, tileMap->tileList[i].texture, NULL, &renderingCoords);
         }
-    }  
+    }
+}
+Vec2 selectTile(TileMap* tileMap, Vec2* mouseCoords)
+{
+    Vec2 selectedTileCoord;
+
+    selectedTileCoord.x = (mouseCoords->x - tileMap->xOffset) / 32;
+    selectedTileCoord.y = (mouseCoords->y - tileMap->yOffset) / 32;
+
+    return selectedTileCoord;
+}
+void destroyTile(TileMap* tileMap, Vec2* tileCoords)
+{
+    if(tileMap->tileList[tileCoords->x * tileMap->tileHight + tileCoords->y].exists == 1)
+    {
+        tileMap->tileList[tileCoords->x * tileMap->tileHight + tileCoords->y].exists = 0;
+        SDL_DestroyTexture(tileMap->tileList[tileCoords->x * tileMap->tileHight + tileCoords->y].texture);
+    }
 }
 void generateWorld(TileMap* tileMap, int seed)
 {
