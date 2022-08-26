@@ -50,7 +50,7 @@ int main(int argc, char *args[])
     generateWorld(&tileMap, time(NULL));
     
     //mouse and keyboard variables
-    //Vec2 mouseCoords;
+    Vec2 mouseCoords;
     const Uint8* keyState;
 
     // game loop variables
@@ -67,13 +67,21 @@ int main(int argc, char *args[])
         timeStep = SDL_GetTicks(); //time in beginning of loop
 
         /*poll events*/
-        SDL_PollEvent(&pollEvent);
-        //SDL_GetMouseState(&mouseCoords.x, &mouseCoords.y);
         keyState = SDL_GetKeyboardState(NULL);
-
-        if(pollEvent.type == SDL_QUIT)
+        SDL_GetMouseState(&mouseCoords.x, &mouseCoords.y);
+        
+        while(SDL_PollEvent(&pollEvent))
         {
-            gameRunning = 0;
+            /*makes sure to process all these event during this itteration of the loop so they dont build up on the event stack*/
+            if(pollEvent.button.button == SDL_BUTTON_LEFT)
+            {
+                Vec2 selectedTile = selectTile(&tileMap, &mouseCoords);
+                destroyTile(&tileMap, &selectedTile);
+            }
+            if(pollEvent.type == SDL_QUIT)
+            {
+                gameRunning = 0;
+            }
         }
         if(keyState[SDL_SCANCODE_UP])
         {
@@ -140,8 +148,6 @@ int main(int argc, char *args[])
             animationItterater++;
         }
 
-        //Vec2 selectedTile = selectTile(&tileMap, &mouseCoords);
-        //destroyTile(&tileMap, &selectedTile);
         
         /*render*/
 
