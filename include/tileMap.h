@@ -7,7 +7,7 @@
 
 TileMap createTileMap(SDL_Renderer* ren, int width, int hight);
 
-void addTile(TileMap* tileMap, int x, int y, const char* texture);
+void addTile(TileMap* tileMap, int x, int y, int collidable, const char* texture);
 void destroyTileMap(TileMap* tileMap);
 
 void updateTileMap(TileMap* tileMap, Entity* entity);

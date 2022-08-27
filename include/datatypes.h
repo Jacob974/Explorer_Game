@@ -31,7 +31,8 @@ typedef struct Entity
  */
 typedef struct Tile 
 {
-    Sint8 exists; //whether or not the tile should be ignored or not
+    int collidable; //if entities collide with it
+    int exists; //whether or not the tile should be ignored or not
     Vec2 coords;
     SDL_Rect renderingCoords; //holds the coords of where to render the tile
     SDL_Texture* texture;

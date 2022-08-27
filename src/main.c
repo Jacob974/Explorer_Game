@@ -35,12 +35,12 @@ int main(int argc, char *args[])
     SDL_RenderPresent(renderer);
 
     // creates game objects
-    Entity player = createEntity(0, -64, windowWidth / 2, windowHight / 2, 32, 64, "res/gfx/man_in_suit.png", renderer);
+    Entity player = createEntity(0, -64, windowWidth / 2, windowHight / 2, 32, 64, "res/gfx/man_in_suit_with_gun.png", renderer);
     SDL_Rect playerImageRect = (SDL_Rect){.x = 0, .y = 0, .w = 32, .h = 64};
     TileMap tileMap = createTileMap(renderer, 1000, 50); //this needs to be destroyed at the end of the program
 
     //misc variables
-    Sint8 pendingJump = 0;
+    int pendingJump = 0;
     Uint64 animationItterater = 0; //counts up each time the game update
     int animationDelay; //how many updates before the animation updates
     int prevAccel = 0; //prevous y accel of the player
@@ -78,24 +78,30 @@ int main(int argc, char *args[])
                 Vec2 selectedTile = selectTile(&tileMap, &mouseCoords);
                 destroyTile(&tileMap, &selectedTile);
             }
+            if(pollEvent.button.button == SDL_BUTTON_MIDDLE)
+            {
+                Vec2 selectedTile = selectTile(&tileMap, &mouseCoords);
+                addTile(&tileMap, selectedTile.x, selectedTile.y, 1, "res/gfx/stone.png");
+            }
             if(pollEvent.type == SDL_QUIT)
             {
                 gameRunning = 0;
             }
         }
-        if(keyState[SDL_SCANCODE_UP])
+
+        if(keyState[SDL_SCANCODE_UP] || keyState[SDL_SCANCODE_W])
         {
             pendingJump = 1;
         }
-        if(keyState[SDL_SCANCODE_DOWN])
+        if(keyState[SDL_SCANCODE_DOWN] || keyState[SDL_SCANCODE_S])
         {
             //player.accel.y += 5;
         }
-        if(keyState[SDL_SCANCODE_RIGHT])
+        if(keyState[SDL_SCANCODE_RIGHT] || keyState[SDL_SCANCODE_D])
         {
             player.accel.x += 5;
         }
-        if(keyState[SDL_SCANCODE_LEFT])
+        if(keyState[SDL_SCANCODE_LEFT] || keyState[SDL_SCANCODE_A])
         {
             player.accel.x -= 5;
         }
@@ -148,14 +154,13 @@ int main(int argc, char *args[])
             animationItterater++;
         }
 
-        
         /*render*/
 
         SDL_RenderClear(renderer);
 
         //renders the tile map
-        renderTileMap(&tileMap, renderer);
         SDL_RenderCopy(renderer, player.texture, &playerImageRect, &player.dest);
+        renderTileMap(&tileMap, renderer);
 
 
         SDL_RenderPresent(renderer);

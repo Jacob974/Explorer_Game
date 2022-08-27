@@ -34,7 +34,7 @@ void detectCollisionPoint(Entity* entity, TileMap* tileMap)
 
     for(int i = 0; i < tileMap->tileHight * tileMap->tileWidth; i++) 
     {
-        if(tileMap->tileList[i].exists == 1)
+        if((tileMap->tileList[i].exists == 1) && (tileMap->tileList[i].collidable == 1))
         {
             if(entity->accel.x < 0)
             {
