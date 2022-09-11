@@ -90,9 +90,9 @@ void generateWorld(TileMap* tileMap, int seed)
     int dirtItr = 0; //how far under the grass to generate dirt
     int treeItr = 10;
 
-    /*generates the grass*/
     for(int i = 0; i < 1000; i++)
     {
+        /*generates the grass*/
         if(grassItr <= 0)
         {
             switch(rand() % 3)
@@ -111,6 +111,12 @@ void generateWorld(TileMap* tileMap, int seed)
         }
         addTile(tileMap, tilePos.x, tilePos.y, 1, "res/gfx/grass.png");
 
+        if(tilePos.x == 3)
+        {
+            tilePos.y -= 1;
+            addTile(tileMap, tilePos.x, tilePos.y, 1, "res/gfx/chest.png");
+            tilePos.y += 1;
+        }
         /*generates a tree*/
         if(treeItr == 0)
         {

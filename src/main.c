@@ -75,13 +75,17 @@ int main(int argc, char *args[])
             /*makes sure to process all these event during this itteration of the loop so they dont build up on the event stack*/
             if(pollEvent.button.button == SDL_BUTTON_LEFT)
             {
-                Vec2 selectedTile = selectTile(&tileMap, &mouseCoords);
-                destroyTile(&tileMap, &selectedTile);
-            }
-            if(pollEvent.button.button == SDL_BUTTON_MIDDLE)
-            {
-                Vec2 selectedTile = selectTile(&tileMap, &mouseCoords);
-                addTile(&tileMap, selectedTile.x, selectedTile.y, 1, "res/gfx/stone.png");
+                if(keyState[SDL_SCANCODE_LSHIFT] || keyState[SDL_SCANCODE_RSHIFT])
+                {
+                    Vec2 selectedTile = selectTile(&tileMap, &mouseCoords);
+                    addTile(&tileMap, selectedTile.x, selectedTile.y, 1, "res/gfx/stone.png");
+                }
+                else
+                {
+                    Vec2 selectedTile = selectTile(&tileMap, &mouseCoords);
+                    destroyTile(&tileMap, &selectedTile);
+                }
+
             }
             if(pollEvent.type == SDL_QUIT)
             {
@@ -111,7 +115,7 @@ int main(int argc, char *args[])
         }
         if(keyState[SDL_SCANCODE_SPACE])
         {
-            player.coords = (Vec2){.x = 32, .y = 0};
+            player.coords = (Vec2){.x = 0, .y = 0};
         }
 
         /* update */
