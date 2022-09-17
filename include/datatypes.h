@@ -33,8 +33,12 @@ typedef struct Tile
 {
     int collidable; //if entities collide with it
     int exists; //whether or not the tile should be ignored or not
+
     Vec2 coords;
     SDL_Rect renderingCoords; //holds the coords of where to render the tile
+
+    int diggable; //whether or not it can be dug
+
     SDL_Texture* texture;
 } Tile;
 /**

@@ -1,0 +1,11 @@
+//this is a custom file format I made for holding information about tiles
+//you can write comments with 2 slashes like in can
+//the following is an example
+
+//[string name],[string texture],[int collidable]
+
+"dirt","res/gfx/blocks/dirt.png",1
+"grass","res/gfx/blocks/dirt.png",1
+"leaves","res/gfx/blocks/dirt.png",1
+"log","res/gfx/blocks/dirt.png",1
+"stone","res/gfx/blocks/dirt.png",1

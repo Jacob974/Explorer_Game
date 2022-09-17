@@ -27,7 +27,7 @@ int main(int argc, char *args[])
     SDL_Event pollEvent;
 
     /*renders "Generating World" while world is loading*/
-    const char* generatingWorldPath = "res/gfx/generating_world.png";
+    const char* generatingWorldPath = "res/gfx/misc/generating_world.png";
     SDL_Texture* generatingWorld = IMG_LoadTexture(renderer, generatingWorldPath);
     
     SDL_RenderClear(renderer);
@@ -35,7 +35,7 @@ int main(int argc, char *args[])
     SDL_RenderPresent(renderer);
 
     // creates game objects
-    Entity player = createEntity(0, -64, windowWidth / 2, windowHight / 2, 32, 64, "res/gfx/man_in_suit_with_gun.png", renderer);
+    Entity player = createEntity(0, -64, windowWidth / 2, windowHight / 2, 32, 64, "res/gfx/entities/man_in_suit.png", renderer);
     SDL_Rect playerImageRect = (SDL_Rect){.x = 0, .y = 0, .w = 32, .h = 64};
     TileMap tileMap = createTileMap(renderer, 1000, 50); //this needs to be destroyed at the end of the program
 
@@ -78,7 +78,7 @@ int main(int argc, char *args[])
                 if(keyState[SDL_SCANCODE_LSHIFT] || keyState[SDL_SCANCODE_RSHIFT])
                 {
                     Vec2 selectedTile = selectTile(&tileMap, &mouseCoords);
-                    addTile(&tileMap, selectedTile.x, selectedTile.y, 1, "res/gfx/stone.png");
+                    addTile(&tileMap, selectedTile.x, selectedTile.y, 1, "res/gfx/blocks/stone.png");
                 }
                 else
                 {

@@ -109,12 +109,12 @@ void generateWorld(TileMap* tileMap, int seed)
             }
             grassItr = ((rand() % 5) + 1);
         }
-        addTile(tileMap, tilePos.x, tilePos.y, 1, "res/gfx/grass.png");
+        addTile(tileMap, tilePos.x, tilePos.y, 1, "res/gfx/blocks/grass.png");
 
         if(tilePos.x == 3)
         {
             tilePos.y -= 1;
-            addTile(tileMap, tilePos.x, tilePos.y, 1, "res/gfx/chest.png");
+            addTile(tileMap, tilePos.x, tilePos.y, 1, "res/gfx/blocks/chest.png");
             tilePos.y += 1;
         }
         /*generates a tree*/
@@ -125,16 +125,16 @@ void generateWorld(TileMap* tileMap, int seed)
             
             //generates the trunk
             treePos.y--;
-            addTile(tileMap, treePos.x, treePos.y, 1, "res/gfx/log.png");
+            addTile(tileMap, treePos.x, treePos.y, 1, "res/gfx/blocks/log.png");
             treePos.y--;
-            addTile(tileMap, treePos.x, treePos.y, 1, "res/gfx/log.png");
+            addTile(tileMap, treePos.x, treePos.y, 1, "res/gfx/blocks/log.png");
 
             //generate the leaves
             treePos.x-=2;
             treePos.y--;
             for(int i = 0; i < 5; i++) //first layer
             {
-                addTile(tileMap, treePos.x, treePos.y, 0, "res/gfx/leaves.png");
+                addTile(tileMap, treePos.x, treePos.y, 0, "res/gfx/blocks/leaves.png");
                 treePos.x++;
             }
 
@@ -142,14 +142,14 @@ void generateWorld(TileMap* tileMap, int seed)
             treePos.y--;
             for(int i = 0; i < 5; i++) //second layer
             {
-                addTile(tileMap, treePos.x, treePos.y, 0, "res/gfx/leaves.png");
+                addTile(tileMap, treePos.x, treePos.y, 0, "res/gfx/blocks/leaves.png");
                 treePos.x++;
             }
             treePos.x -= 4;
             treePos.y--;
             for(int i = 0; i < 3; i++) //third layer
             {
-                addTile(tileMap, treePos.x, treePos.y, 0, "res/gfx/leaves.png");
+                addTile(tileMap, treePos.x, treePos.y, 0, "res/gfx/blocks/leaves.png");
                 treePos.x++;
             }
         }
@@ -161,14 +161,14 @@ void generateWorld(TileMap* tileMap, int seed)
         for(int i = 0; i < dirtItr; i++)
         {
             tilePos.y++;
-            addTile(tileMap, tilePos.x, tilePos.y, 1, "res/gfx/dirt.png");
+            addTile(tileMap, tilePos.x, tilePos.y, 1, "res/gfx/blocks/dirt.png");
         }
 
         /*generates the stone*/
         while(tilePos.y < 30)
         {
             tilePos.y++;
-            addTile(tileMap, tilePos.x, tilePos.y, 1, "res/gfx/stone.png");
+            addTile(tileMap, tilePos.x, tilePos.y, 1, "res/gfx/blocks/stone.png");
         }
 
         tilePos.y = prevYTilePos;
