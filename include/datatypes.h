@@ -42,7 +42,7 @@ typedef struct Tile
     SDL_Texture* texture;
 } Tile;
 /**
- *  @brief a datatype that holds data about an item which can be on the groun sometimes
+ *  @brief a datatype that holds data about an item which can be on the ground sometimes
  */
 typedef struct Item
 {

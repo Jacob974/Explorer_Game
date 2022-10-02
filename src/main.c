@@ -6,6 +6,7 @@
 #include <time.h>
 
 #include "datatypes.h"
+#include "utils.h"
 #include "entity.h"
 #include "tileMap.h"
 
@@ -21,12 +22,43 @@ int main(int argc, char *args[])
     int windowWidth = 1100;
     int gameRunning = 1;
 
-    // creates SDL objects
-    SDL_Window *window = SDL_CreateWindow(title, 0, 0, windowWidth, windowHight,SDL_WINDOW_RESIZABLE);
+    // SDL variables
+    SDL_Window *window = SDL_CreateWindow(title, 0, 0, windowWidth, windowHight, SDL_WINDOW_RESIZABLE);
     SDL_Renderer *renderer = SDL_CreateRenderer(window, -1, SDL_RENDERER_ACCELERATED);
     SDL_Event pollEvent;
 
-    /*renders "Generating World" while world is loading*/
+    // creates game objects
+    Entity player = createEntity(0, -64, windowWidth / 2, windowHight / 2, 32, 64, "res/gfx/entities/man_in_suit.png", renderer);
+    SDL_Rect playerImageRect = (SDL_Rect){.x = 0, .y = 0, .w = 32, .h = 64};
+    TileMap tileMap = createTileMap(renderer, 1000, 50); //this needs to be destroyed at the end of the program
+
+    //animation variables
+    Uint64 animationItterater = 0; //counts up each time the game update
+    int animationDelay; //how many updates before the animation updates
+    Uint8 animationDelayItterator; //counts down from animationDelay until it hits 0
+
+    //mouse and keyboard variables
+    Vec2 mouseCoords;
+    const Uint8* keyState;
+
+    //misc variables
+    int sandbox;
+    int pendingJump = 0;
+    int prevAccel = 0; //prevous y accel of the player
+
+    SDL_Texture* skyTexture = IMG_LoadTexture(renderer, "res/gfx/misc/sky.png");
+    SDL_Rect skyRect = (SDL_Rect){.x = 0, .y = 0,};
+    SDL_GetWindowSize(window, &skyRect.w, &skyRect.h);
+
+
+    //game loop variables
+    unsigned long timeStep = 0; 
+    int fps = 60;
+    int frameLength = 1000 / fps; // times per milisecond
+    animationDelay = fps / 10;
+    animationDelayItterator = animationDelay;
+
+    /*pregame computations*/
     const char* generatingWorldPath = "res/gfx/misc/generating_world.png";
     SDL_Texture* generatingWorld = IMG_LoadTexture(renderer, generatingWorldPath);
     
@@ -34,31 +66,20 @@ int main(int argc, char *args[])
     SDL_RenderCopy(renderer, generatingWorld, NULL, NULL);
     SDL_RenderPresent(renderer);
 
-    // creates game objects
-    Entity player = createEntity(0, -64, windowWidth / 2, windowHight / 2, 32, 64, "res/gfx/entities/man_in_suit.png", renderer);
-    SDL_Rect playerImageRect = (SDL_Rect){.x = 0, .y = 0, .w = 32, .h = 64};
-    TileMap tileMap = createTileMap(renderer, 1000, 50); //this needs to be destroyed at the end of the program
+    if(argc > 1)
+    {
+        if(!strcmp("sandbox", args[1]))
+        {
+            printf("sandbox\n");
+            sandbox = 1;
+        }
+        else
+        {
+            sandbox = 0;
+        }
+    }
 
-    //misc variables
-    int pendingJump = 0;
-    Uint64 animationItterater = 0; //counts up each time the game update
-    int animationDelay; //how many updates before the animation updates
-    int prevAccel = 0; //prevous y accel of the player
-    Uint8 animationDelayItterator; //counts down from animationDelay until it hits 0
-
-    //adds tiles to map
     generateWorld(&tileMap, time(NULL));
-    
-    //mouse and keyboard variables
-    Vec2 mouseCoords;
-    const Uint8* keyState;
-
-    // game loop variables
-    unsigned long timeStep = 0; 
-    int fps = 60;
-    int frameLength = 1000 / fps; // times per milisecond
-    animationDelay = fps / 10;
-    animationDelayItterator = animationDelay;
 
     /*game loop*/
     SDL_SetRenderDrawColor(renderer, 0x87, 0xCE, 0xEB, 255);
@@ -66,14 +87,15 @@ int main(int argc, char *args[])
     {
         timeStep = SDL_GetTicks(); //time in beginning of loop
 
-        /*poll events*/
+        /*polls events*/
         keyState = SDL_GetKeyboardState(NULL);
         SDL_GetMouseState(&mouseCoords.x, &mouseCoords.y);
         
+        /*processes mouse events*/
         while(SDL_PollEvent(&pollEvent))
         {
             /*makes sure to process all these event during this itteration of the loop so they dont build up on the event stack*/
-            if(pollEvent.button.button == SDL_BUTTON_LEFT)
+            if(pollEvent.button.button == SDL_BUTTON_LEFT && sandbox)
             {
                 if(keyState[SDL_SCANCODE_LSHIFT] || keyState[SDL_SCANCODE_RSHIFT])
                 {
@@ -93,6 +115,7 @@ int main(int argc, char *args[])
             }
         }
 
+        /*processes keyboard events*/
         if(keyState[SDL_SCANCODE_UP] || keyState[SDL_SCANCODE_W])
         {
             pendingJump = 1;
@@ -116,6 +139,7 @@ int main(int argc, char *args[])
         if(keyState[SDL_SCANCODE_SPACE])
         {
             player.coords = (Vec2){.x = 0, .y = 0};
+            player.accel.y = 0;
         }
 
         /* update */
@@ -125,6 +149,7 @@ int main(int argc, char *args[])
         player.coords.x += player.accel.x;
         player.coords.y += player.accel.y;
 
+        /*makes the player jump if the player is on the ground*/
         if(pendingJump && player.accel.y == 0 && prevAccel > 0)
         {
             player.accel.y -= 10;
@@ -132,12 +157,14 @@ int main(int argc, char *args[])
         pendingJump = 0;
 
         player.accel.y += 1;
-        playerImageRect.x = 32 * (animationItterater % 4);
-        if(player.accel.x < 0)
+
+        /*animates the player*/
+        playerImageRect.x = 32 * (animationItterater % 4); //horizontally selects one of the 4 frames of the player image in order to animate the player  
+        if(player.accel.x < 0) //selects the second row of panels from the player image to make the player run left
         {
             playerImageRect.y = 64;
         }
-        else if(player.accel.x > 0)
+        else if(player.accel.x > 0) //selects the second row of panels from the player image to make the player run left
         {
             playerImageRect.y = 128;
         }
@@ -150,8 +177,8 @@ int main(int argc, char *args[])
 
         updateTileMap(&tileMap, &player);
 
-        animationDelayItterator--;
         //updates the animation itterater
+        animationDelayItterator--;
         if(animationDelayItterator <= 0)
         {
             animationDelayItterator = animationDelay;
@@ -163,6 +190,7 @@ int main(int argc, char *args[])
         SDL_RenderClear(renderer);
 
         //renders the tile map
+        SDL_RenderCopy(renderer, skyTexture, NULL, NULL);
         SDL_RenderCopy(renderer, player.texture, &playerImageRect, &player.dest);
         renderTileMap(&tileMap, renderer);
 
@@ -178,13 +206,8 @@ int main(int argc, char *args[])
         {
             printf("too fast!!!\n");
         }
-        /*print*/
-        if(argc > 1)
-        {
-            printf("xCoord: %d\n yCoord: %d\n\n", player.coords.x, player.coords.y);
-        }
     }
-
+      
     destroyTileMap(&tileMap);
     SDL_DestroyWindow(window);
     SDL_Quit();
